@@ -1,0 +1,312 @@
+/* =====================================================
+   OPERATION RESEARCH SMART SOLVER
+   Global Styles
+   ===================================================== */
+
+/* ---------- Google Font ---------- */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+
+/* ---------- Root Variables ---------- */
+
+:root {
+  /* Project Color Theme */
+  --primary: #2563eb;
+  --secondary: #0ea5e9;
+  --accent: #14b8a6;
+
+  /* Background Colors */
+  --background: #ffffff;
+  --background-light: #f8fafc;
+  --background-blue: #eff6ff;
+
+  /* Text Colors */
+  --text-dark: #1f2937;
+  --text-medium: #4b5563;
+  --text-light: #6b7280;
+
+  /* Other */
+  --border-color: #e5e7eb;
+  --card-radius: 18px;
+  --button-radius: 10px;
+
+  /* Shadows */
+  --shadow-small: 0 4px 15px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-large: 0 20px 50px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ---------- Basic Reset ---------- */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* ---------- Body ---------- */
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--background);
+  color: var(--text-dark);
+
+  min-width: 320px;
+  min-height: 100vh;
+
+  line-height: 1.6;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* ---------- Links ---------- */
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+/* ---------- Images ---------- */
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+
+/* ---------- Buttons ---------- */
+
+button {
+  font-family: inherit;
+}
+
+
+/* ---------- Main Application ---------- */
+
+#root {
+  min-height: 100vh;
+}
+
+
+/* ---------- Container ---------- */
+
+.container-custom {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+/* ---------- Section ---------- */
+
+.section {
+  padding: 80px 0;
+}
+
+
+/* ---------- Section Heading ---------- */
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+.section-subtitle {
+  color: var(--text-medium);
+  font-size: 1.05rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+
+/* ---------- Cards ---------- */
+
+.solver-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  border-radius: var(--card-radius);
+  padding: 30px;
+
+  box-shadow: var(--shadow-small);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.solver-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-medium);
+}
+
+
+/* ---------- Primary Button ---------- */
+
+.btn-solver {
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--secondary)
+  );
+
+  color: white;
+  border: none;
+
+  padding: 12px 24px;
+
+  border-radius: var(--button-radius);
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-solver:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+
+/* ---------- Secondary Button ---------- */
+
+.btn-outline-solver {
+  background: transparent;
+
+  color: var(--primary);
+
+  border: 1.5px solid var(--primary);
+
+  padding: 11px 23px;
+
+  border-radius: var(--button-radius);
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.btn-outline-solver:hover {
+  background: var(--primary);
+  color: white;
+}
+
+
+/* ---------- Gradient Text ---------- */
+
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--secondary),
+    var(--accent)
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+
+/* ---------- Glass Card ---------- */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+
+  border-radius: var(--card-radius);
+
+  box-shadow: var(--shadow-medium);
+}
+
+
+/* ---------- Animations ---------- */
+
+.fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.slide-up {
+  animation: slideUp 0.6s ease forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ---------- Responsive Design ---------- */
+
+@media (max-width: 768px) {
+
+  .section {
+    padding: 55px 0;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .container-custom {
+    width: 92%;
+  }
+
+}
+
+
+/* ---------- Dark Mode ---------- */
+
+body.dark-mode {
+  --background: #0f172a;
+  --background-light: #1e293b;
+  --background-blue: #172554;
+
+  --text-dark: #f8fafc;
+  --text-medium: #cbd5e1;
+  --text-light: #94a3b8;
+
+  --border-color: #334155;
+}
+
+body.dark-mode .solver-card {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(71, 85, 105, 0.5);
+}
