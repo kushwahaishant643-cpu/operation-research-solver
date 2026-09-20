@@ -1,6 +1,7 @@
 /* =====================================================
    OPERATION RESEARCH SMART SOLVER
-   Global Styles
+   Global Styles + Responsive Design
+   Desktop UI remains unchanged
    ===================================================== */
 
 /* ---------- Google Font ---------- */
@@ -8,37 +9,37 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 
-/* ---------- Root Variables ---------- */
+/* =====================================================
+   ROOT VARIABLES
+   ===================================================== */
 
 :root {
-  /* Project Color Theme */
   --primary: #2563eb;
   --secondary: #0ea5e9;
   --accent: #14b8a6;
 
-  /* Background Colors */
   --background: #ffffff;
   --background-light: #f8fafc;
   --background-blue: #eff6ff;
 
-  /* Text Colors */
   --text-dark: #1f2937;
   --text-medium: #4b5563;
   --text-light: #6b7280;
 
-  /* Other */
   --border-color: #e5e7eb;
+
   --card-radius: 18px;
   --button-radius: 10px;
 
-  /* Shadows */
   --shadow-small: 0 4px 15px rgba(0, 0, 0, 0.06);
   --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.08);
   --shadow-large: 0 20px 50px rgba(0, 0, 0, 0.12);
 }
 
 
-/* ---------- Basic Reset ---------- */
+/* =====================================================
+   BASIC RESET
+   ===================================================== */
 
 * {
   margin: 0;
@@ -46,24 +47,58 @@
   box-sizing: border-box;
 }
 
-
-/* ---------- Body ---------- */
-
-body {
-  font-family: "Inter", sans-serif;
-  background-color: var(--background);
-  color: var(--text-dark);
-
-  min-width: 320px;
-  min-height: 100vh;
-
-  line-height: 1.6;
-
-  -webkit-font-smoothing: antialiased;
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 
-/* ---------- Links ---------- */
+/* =====================================================
+   HTML / BODY
+   ===================================================== */
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 320px;
+  min-height: 100vh;
+
+  font-family: "Inter", sans-serif;
+
+  background-color: var(--background);
+  color: var(--text-dark);
+
+  line-height: 1.6;
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* =====================================================
+   ROOT APPLICATION
+   ===================================================== */
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+
+/* =====================================================
+   LINKS
+   ===================================================== */
 
 a {
   text-decoration: none;
@@ -71,29 +106,60 @@ a {
 }
 
 
-/* ---------- Images ---------- */
+/* =====================================================
+   IMAGES
+   ===================================================== */
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
 
-/* ---------- Buttons ---------- */
+/* =====================================================
+   SVG / CANVAS
+   ===================================================== */
+
+svg {
+  max-width: 100%;
+}
+
+canvas {
+  max-width: 100%;
+}
+
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
 
 button {
   font-family: inherit;
 }
 
 
-/* ---------- Main Application ---------- */
+/* =====================================================
+   FORM ELEMENTS
+   ===================================================== */
 
-#root {
-  min-height: 100vh;
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
 
-/* ---------- Container ---------- */
+/* =====================================================
+   CONTAINER
+   ===================================================== */
 
 .container-custom {
   width: 90%;
@@ -102,14 +168,18 @@ button {
 }
 
 
-/* ---------- Section ---------- */
+/* =====================================================
+   SECTION
+   ===================================================== */
 
 .section {
   padding: 80px 0;
 }
 
 
-/* ---------- Section Heading ---------- */
+/* =====================================================
+   SECTION HEADING
+   ===================================================== */
 
 .section-title {
   font-size: 2.2rem;
@@ -126,12 +196,17 @@ button {
 }
 
 
-/* ---------- Cards ---------- */
+/* =====================================================
+   CARDS
+   ===================================================== */
 
 .solver-card {
   background: rgba(255, 255, 255, 0.85);
+
   border: 1px solid rgba(229, 231, 235, 0.8);
+
   border-radius: var(--card-radius);
+
   padding: 30px;
 
   box-shadow: var(--shadow-small);
@@ -147,7 +222,9 @@ button {
 }
 
 
-/* ---------- Primary Button ---------- */
+/* =====================================================
+   PRIMARY BUTTON
+   ===================================================== */
 
 .btn-solver {
   background: linear-gradient(
@@ -157,6 +234,7 @@ button {
   );
 
   color: white;
+
   border: none;
 
   padding: 12px 24px;
@@ -174,11 +252,15 @@ button {
 
 .btn-solver:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.25);
 }
 
 
-/* ---------- Secondary Button ---------- */
+/* =====================================================
+   SECONDARY BUTTON
+   ===================================================== */
 
 .btn-outline-solver {
   background: transparent;
@@ -204,7 +286,9 @@ button {
 }
 
 
-/* ---------- Gradient Text ---------- */
+/* =====================================================
+   GRADIENT TEXT
+   ===================================================== */
 
 .gradient-text {
   background: linear-gradient(
@@ -221,7 +305,9 @@ button {
 }
 
 
-/* ---------- Glass Card ---------- */
+/* =====================================================
+   GLASS CARD
+   ===================================================== */
 
 .glass-card {
   background: rgba(255, 255, 255, 0.7);
@@ -237,7 +323,9 @@ button {
 }
 
 
-/* ---------- Animations ---------- */
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
 
 .fade-in {
   animation: fadeIn 0.6s ease forwards;
@@ -273,26 +361,317 @@ button {
 }
 
 
-/* ---------- Responsive Design ---------- */
+/* =====================================================
+   TABLE RESPONSIVENESS
+   ===================================================== */
+
+table {
+  max-width: 100%;
+}
+
+.table-responsive {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+  min-width: 600px;
+}
+
+
+/* =====================================================
+   FLEX / GRID SAFETY
+   ===================================================== */
+
+.row,
+[class*="row"] {
+  max-width: 100%;
+}
+
+.row > *,
+[class*="row"] > * {
+  min-width: 0;
+}
+
+[class*="col-"] {
+  min-width: 0;
+}
+
+
+/* =====================================================
+   MOBILE RESPONSIVE DESIGN
+   ===================================================== */
 
 @media (max-width: 768px) {
+
+  /* ---------- Page ---------- */
+
+  body {
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+
+  #root {
+    overflow-x: hidden;
+  }
+
+
+  /* ---------- Sections ---------- */
 
   .section {
     padding: 55px 0;
   }
 
+
+  /* ---------- Section Titles ---------- */
+
   .section-title {
     font-size: 1.8rem;
+    line-height: 1.25;
   }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+
+  /* ---------- Custom Container ---------- */
 
   .container-custom {
     width: 92%;
+    max-width: 100%;
   }
 
+
+  /* ---------- Bootstrap Container ---------- */
+
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+
+  /* ---------- Cards ---------- */
+
+  .solver-card {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 20px;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+  }
+
+  .solver-card:hover {
+    transform: none;
+  }
+
+  .glass-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+
+  /* ---------- Buttons ---------- */
+
+  .btn-solver,
+  .btn-outline-solver {
+    min-height: 44px;
+    padding: 11px 18px;
+  }
+
+
+  /* ---------- Images ---------- */
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+
+  /* ---------- Graphs ---------- */
+
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+
+  /* ---------- Tables ---------- */
+
+  .table-responsive {
+    width: 100%;
+    max-width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    border-radius: 10px;
+  }
+
+  table {
+    white-space: nowrap;
+  }
+
+
+  /* ---------- Form Controls ---------- */
+
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+
+  /* ---------- Prevent Flex Overflow ---------- */
+
+  [style*="display: flex"] {
+    max-width: 100%;
+  }
+
+
+  /* ---------- Long Text ---------- */
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  div {
+    overflow-wrap: break-word;
+  }
 }
 
 
-/* ---------- Dark Mode ---------- */
+/* =====================================================
+   SMALL MOBILE DEVICES
+   ===================================================== */
+
+@media (max-width: 576px) {
+
+  /* ---------- Container ---------- */
+
+  .container-custom {
+    width: 94%;
+  }
+
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+
+  /* ---------- Section ---------- */
+
+  .section {
+    padding: 42px 0;
+  }
+
+
+  /* ---------- Typography ---------- */
+
+  .section-title {
+    font-size: 1.55rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.9rem;
+  }
+
+
+  /* ---------- Cards ---------- */
+
+  .solver-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+
+  /* ---------- Buttons ---------- */
+
+  .btn-solver,
+  .btn-outline-solver {
+    width: 100%;
+    min-height: 46px;
+  }
+
+
+  /* ---------- Table ---------- */
+
+  .table-responsive table {
+    min-width: 550px;
+  }
+}
+
+
+/* =====================================================
+   EXTRA SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 400px) {
+
+  .container-custom {
+    width: 95%;
+  }
+
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .section {
+    padding: 35px 0;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+  }
+
+  .solver-card {
+    padding: 14px;
+  }
+
+  .table-responsive table {
+    min-width: 520px;
+  }
+}
+
+
+/* =====================================================
+   LANDSCAPE MOBILE
+   ===================================================== */
+
+@media (max-width: 768px) and (orientation: landscape) {
+
+  .section {
+    padding: 35px 0;
+  }
+
+  .solver-card {
+    padding: 18px;
+  }
+}
+
+
+/* =====================================================
+   DARK MODE
+   ===================================================== */
 
 body.dark-mode {
   --background: #0f172a;
@@ -306,7 +685,26 @@ body.dark-mode {
   --border-color: #334155;
 }
 
+
 body.dark-mode .solver-card {
   background: rgba(30, 41, 59, 0.8);
-  border-color: rgba(71, 85, 105, 0.5);
+
+  border-color:
+    rgba(71, 85, 105, 0.5);
+}
+
+
+/* =====================================================
+   DARK MODE MOBILE
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+  body.dark-mode {
+    overflow-x: hidden;
+  }
+
+  body.dark-mode .solver-card {
+    background: rgba(30, 41, 59, 0.9);
+  }
 }

@@ -298,15 +298,15 @@ function Learn() {
           </h3>
 
           <Equation>
-            Maximize / Minimize Z = câ‚xâ‚ + câ‚‚xâ‚‚ + ... + câ‚™xâ‚™
+            Maximize / Minimize Z = c1x1 + c2x2 + ... + cnxn
             <br />
             Subject to:
             <br />
-            aâ‚â‚xâ‚ + aâ‚â‚‚xâ‚‚ + ... + aâ‚â‚™xâ‚™ â‰¤ / = / â‰¥ bâ‚
+            a11x1 + a12x2 + ... + a1nxn &lt;= / = / &gt;= b1
             <br />
-            aâ‚‚â‚xâ‚ + aâ‚‚â‚‚xâ‚‚ + ... + aâ‚‚â‚™xâ‚™ â‰¤ / = / â‰¥ bâ‚‚
+            a21x1 + a22x2 + ... + a2nxn &lt;= / = / &gt;= b2
             <br />
-            xâ‚, xâ‚‚, ... , xâ‚™ â‰¥ 0
+            x1, x2, ... , xn &gt;= 0
           </Equation>
 
           <h3 style={{ ...styles.heading, marginTop: "28px" }}>
@@ -342,12 +342,12 @@ function Learn() {
         ["Feasible Solution", "Any solution satisfying all constraints."],
         ["Feasible Region", "Region containing all feasible solutions."],
         ["Optimal Solution", "Best feasible solution."],
-        ["Slack", "Unused amount of a â‰¤ resource constraint."],
-        ["Surplus", "Excess amount in a â‰¥ constraint."],
+        ["Slack", "Unused amount of a <= resource constraint."],
+        ["Surplus", "Excess amount in a >= constraint."],
         ["RHS", "Right-hand side value of a constraint."],
         ["Coefficient", "Numerical multiplier of a variable."],
         ["Binding Constraint", "Constraint satisfied exactly at optimum."],
-        ["Non-negativity", "Condition xâ‚, xâ‚‚ â‰¥ 0."],
+        ["Non-negativity", "Condition x1, x2 >= 0."],
       ];
 
       return (
@@ -403,23 +403,23 @@ function Learn() {
 
           <div style={{ marginTop: "25px" }}>
             <Step number="1" title="Define Decision Variables">
-              Let xâ‚ = units of Product A and xâ‚‚ = units of Product B.
+              Let x1 = units of Product A and x2 = units of Product B.
             </Step>
 
             <Step number="2" title="Write the Objective Function">
-              Suppose profit per unit of A is â‚¹40 and B is â‚¹30.
-              <Equation>Maximize Z = 40xâ‚ + 30xâ‚‚</Equation>
+              Suppose profit per unit of A is Rs 40 and B is Rs 30.
+              <Equation>Maximize Z = 40x1 + 30x2</Equation>
             </Step>
 
             <Step number="3" title="Write the Resource Constraints">
               If machine time is limited:
-              <Equation>2xâ‚ + xâ‚‚ â‰¤ 40</Equation>
+              <Equation>2x1 + x2 &lt;= 40</Equation>
               If labour is limited:
-              <Equation>xâ‚ + 2xâ‚‚ â‰¤ 50</Equation>
+              <Equation>x1 + 2x2 &lt;= 50</Equation>
             </Step>
 
             <Step number="4" title="Add Non-Negativity Conditions">
-              <Equation>xâ‚ â‰¥ 0, xâ‚‚ â‰¥ 0</Equation>
+              <Equation>x1 &gt;= 0, x2 &gt;= 0</Equation>
             </Step>
           </div>
         </>
@@ -438,31 +438,31 @@ function Learn() {
           </p>
 
           <Equation>
-            Maximize Z = 3xâ‚ + 5xâ‚‚
+            Maximize Z = 3x1 + 5x2
             <br />
             Subject to:
             <br />
-            xâ‚ + xâ‚‚ â‰¤ 4
+            x1 + x2 &lt;= 4
             <br />
-            xâ‚ + 3xâ‚‚ â‰¤ 6
+            x1 + 3x2 &lt;= 6
             <br />
-            xâ‚, xâ‚‚ â‰¥ 0
+            x1, x2 &gt;= 0
           </Equation>
 
           <Step number="1" title="Find Intercepts of First Constraint">
-            For xâ‚ + xâ‚‚ = 4:
+            For x1 + x2 = 4:
             <br />
-            If xâ‚ = 0, xâ‚‚ = 4.
+            If x1 = 0, x2 = 4.
             <br />
-            If xâ‚‚ = 0, xâ‚ = 4.
+            If x2 = 0, x1 = 4.
           </Step>
 
           <Step number="2" title="Find Intercepts of Second Constraint">
-            For xâ‚ + 3xâ‚‚ = 6:
+            For x1 + 3x2 = 6:
             <br />
-            If xâ‚ = 0, xâ‚‚ = 2.
+            If x1 = 0, x2 = 2.
             <br />
-            If xâ‚‚ = 0, xâ‚ = 6.
+            If x2 = 0, x1 = 6.
           </Step>
 
           <Step number="3" title="Identify Feasible Corner Points">
@@ -474,7 +474,7 @@ function Learn() {
 
           <Step number="4" title="Evaluate Objective Function">
             <DataTable
-              headers={["Corner Point", "Z = 3xâ‚ + 5xâ‚‚"]}
+              headers={["Corner Point", "Z = 3x1 + 5x2"]}
               rows={[
                 ["(0,0)", "0"],
                 ["(4,0)", "12"],
@@ -487,7 +487,7 @@ function Learn() {
           <Step number="5" title="Final Answer">
             Maximum value is 14 at:
             <Equation>
-              xâ‚ = 3, xâ‚‚ = 1
+              x1 = 3, x2 = 1
               <br />
               Maximum Z = 14
             </Equation>
@@ -508,39 +508,39 @@ function Learn() {
           </p>
 
           <Equation>
-            Maximize Z = 3xâ‚ + 5xâ‚‚
+            Maximize Z = 3x1 + 5x2
             <br />
             Subject to:
             <br />
-            xâ‚ + 2xâ‚‚ â‰¤ 8
+            x1 + 2x2 &lt;= 8
             <br />
-            3xâ‚ + 2xâ‚‚ â‰¤ 12
+            3x1 + 2x2 &lt;= 12
             <br />
-            xâ‚, xâ‚‚ â‰¥ 0
+            x1, x2 &gt;= 0
           </Equation>
 
           <Step number="1" title="Convert Constraints into Equations">
-            Add slack variables sâ‚ and sâ‚‚.
+            Add slack variables s1 and s2.
             <Equation>
-              xâ‚ + 2xâ‚‚ + sâ‚ = 8
+              x1 + 2x2 + s1 = 8
               <br />
-              3xâ‚ + 2xâ‚‚ + sâ‚‚ = 12
+              3x1 + 2x2 + s2 = 12
             </Equation>
           </Step>
 
           <Step number="2" title="Construct Initial Tableau">
             <DataTable
-              headers={["BV", "xâ‚", "xâ‚‚", "sâ‚", "sâ‚‚", "RHS"]}
+              headers={["BV", "x1", "x2", "s1", "s2", "RHS"]}
               rows={[
-                ["sâ‚", "1", "2", "1", "0", "8"],
-                ["sâ‚‚", "3", "2", "0", "1", "12"],
+                ["s1", "1", "2", "1", "0", "8"],
+                ["s2", "3", "2", "0", "1", "12"],
                 ["Z", "-3", "-5", "0", "0", "0"],
               ]}
             />
           </Step>
 
           <Step number="3" title="Select Entering Variable">
-            The most negative coefficient in the Z-row is -5. Therefore xâ‚‚
+            The most negative coefficient in the Z-row is -5. Therefore x2
             enters the basis.
           </Step>
 
@@ -555,7 +555,7 @@ function Learn() {
           </Step>
 
           <Step number="6" title="Optimal Solution">
-            The final tableau gives the optimal values of xâ‚, xâ‚‚ and Z.
+            The final tableau gives the optimal values of x1, x2 and Z.
           </Step>
         </>
       );
@@ -567,18 +567,18 @@ function Learn() {
           <h2 style={styles.sectionTitle}>Solved LPP Examples</h2>
 
           <div style={{ marginBottom: "25px" }}>
-            <h3 style={styles.heading}>Example 1 â€” Graphical Method</h3>
+            <h3 style={styles.heading}>Example 1 - Graphical Method</h3>
 
             <Equation>
-              Maximize Z = 40xâ‚ + 30xâ‚‚
+              Maximize Z = 40x1 + 30x2
               <br />
               Subject to:
               <br />
-              2xâ‚ + xâ‚‚ â‰¤ 40
+              2x1 + x2 &lt;= 40
               <br />
-              xâ‚ + 2xâ‚‚ â‰¤ 50
+              x1 + 2x2 &lt;= 50
               <br />
-              xâ‚, xâ‚‚ â‰¥ 0
+              x1, x2 &gt;= 0
             </Equation>
 
             <p style={styles.muted}>
@@ -590,18 +590,18 @@ function Learn() {
           </div>
 
           <div>
-            <h3 style={styles.heading}>Example 2 â€” Minimization</h3>
+            <h3 style={styles.heading}>Example 2 - Minimization</h3>
 
             <Equation>
-              Minimize Z = 2xâ‚ + 3xâ‚‚
+              Minimize Z = 2x1 + 3x2
               <br />
               Subject to:
               <br />
-              xâ‚ + xâ‚‚ â‰¥ 4
+              x1 + x2 &gt;= 4
               <br />
-              xâ‚ + 2xâ‚‚ â‰¥ 6
+              x1 + 2x2 &gt;= 6
               <br />
-              xâ‚, xâ‚‚ â‰¥ 0
+              x1, x2 &gt;= 0
             </Equation>
 
             <p style={styles.muted}>
@@ -675,7 +675,7 @@ function Learn() {
       return (
         <>
           <h2 style={styles.sectionTitle}>
-            Transportation Problem â€” Introduction
+            Transportation Problem - Introduction
           </h2>
 
           <p style={styles.muted}>
@@ -695,26 +695,11 @@ function Learn() {
             }}
           >
             {[
-              [
-                "Sources",
-                "Places from where goods are supplied.",
-              ],
-              [
-                "Destinations",
-                "Places where goods are required.",
-              ],
-              [
-                "Supply",
-                "Quantity available at each source.",
-              ],
-              [
-                "Demand",
-                "Quantity required at each destination.",
-              ],
-              [
-                "Unit Cost",
-                "Cost of transporting one unit.",
-              ],
+              ["Sources", "Places from where goods are supplied."],
+              ["Destinations", "Places where goods are required."],
+              ["Supply", "Quantity available at each source."],
+              ["Demand", "Quantity required at each destination."],
+              ["Unit Cost", "Cost of transporting one unit."],
               [
                 "Objective",
                 "Usually to minimize total transportation cost.",
@@ -772,22 +757,10 @@ function Learn() {
 
     if (activeTransportTopic === "terminology") {
       const terms = [
-        [
-          "Source",
-          "Origin from which units are transported.",
-        ],
-        [
-          "Destination",
-          "Location where units are required.",
-        ],
-        [
-          "Supply",
-          "Availability of units at each source.",
-        ],
-        [
-          "Demand",
-          "Requirement at each destination.",
-        ],
+        ["Source", "Origin from which units are transported."],
+        ["Destination", "Location where units are required."],
+        ["Supply", "Availability of units at each source."],
+        ["Demand", "Requirement at each destination."],
         [
           "Transportation Cost",
           "Cost of moving one unit from a source to a destination.",
@@ -796,14 +769,8 @@ function Learn() {
           "Allocation",
           "Quantity assigned to a particular source-destination cell.",
         ],
-        [
-          "Balanced Problem",
-          "Total supply equals total demand.",
-        ],
-        [
-          "Unbalanced Problem",
-          "Total supply differs from total demand.",
-        ],
+        ["Balanced Problem", "Total supply equals total demand."],
+        ["Unbalanced Problem", "Total supply differs from total demand."],
         [
           "Initial Basic Feasible Solution",
           "A feasible starting transportation solution.",
@@ -825,7 +792,7 @@ function Learn() {
       return (
         <>
           <h2 style={styles.sectionTitle}>
-            Transportation â€” Basic Terminology
+            Transportation - Basic Terminology
           </h2>
 
           <div
@@ -872,7 +839,7 @@ function Learn() {
           </h2>
 
           <p style={styles.muted}>
-            Let there be m sources and n destinations. Let xáµ¢â±¼ represent the
+            Let there be m sources and n destinations. Let xij represent the
             quantity transported from source i to destination j.
           </p>
 
@@ -881,7 +848,7 @@ function Learn() {
           </h3>
 
           <Equation>
-            xáµ¢â±¼ = Quantity transported from source i to destination j
+            xij = Quantity transported from source i to destination j
           </Equation>
 
           <h3 style={{ ...styles.heading, marginTop: "25px" }}>
@@ -889,11 +856,11 @@ function Learn() {
           </h3>
 
           <Equation>
-            Minimize Z = Î£áµ¢ Î£â±¼ cáµ¢â±¼xáµ¢â±¼
+            Minimize Z = SUM(i) SUM(j) cij xij
           </Equation>
 
           <p style={styles.muted}>
-            Here cáµ¢â±¼ represents the transportation cost per unit from source i
+            Here cij represents the transportation cost per unit from source i
             to destination j.
           </p>
 
@@ -902,7 +869,7 @@ function Learn() {
           </h3>
 
           <Equation>
-            Î£â±¼ xáµ¢â±¼ = aáµ¢ &nbsp;&nbsp; for each source i
+            SUM(j) xij = ai &nbsp;&nbsp; for each source i
           </Equation>
 
           <h3 style={{ ...styles.heading, marginTop: "25px" }}>
@@ -910,29 +877,29 @@ function Learn() {
           </h3>
 
           <Equation>
-            Î£áµ¢ xáµ¢â±¼ = bâ±¼ &nbsp;&nbsp; for each destination j
+            SUM(i) xij = bj &nbsp;&nbsp; for each destination j
           </Equation>
 
           <h3 style={{ ...styles.heading, marginTop: "25px" }}>
             Non-Negativity
           </h3>
 
-          <Equation>xáµ¢â±¼ â‰¥ 0</Equation>
+          <Equation>xij &gt;= 0</Equation>
 
           <h3 style={{ ...styles.heading, marginTop: "28px" }}>
             Complete Model
           </h3>
 
           <Equation>
-            Minimize Z = Î£áµ¢Î£â±¼ cáµ¢â±¼xáµ¢â±¼
+            Minimize Z = SUM(i) SUM(j) cij xij
             <br />
             Subject to:
             <br />
-            Î£â±¼xáµ¢â±¼ = aáµ¢
+            SUM(j) xij = ai
             <br />
-            Î£áµ¢xáµ¢â±¼ = bâ±¼
+            SUM(i) xij = bj
             <br />
-            xáµ¢â±¼ â‰¥ 0
+            xij &gt;= 0
           </Equation>
         </>
       );
@@ -1007,7 +974,7 @@ function Learn() {
             <br />
             = 90 + 15 + 40 + 200 + 110
             <br />
-            = â‚¹455
+            = Rs 455
           </Equation>
         </>
       );
@@ -1084,7 +1051,7 @@ function Learn() {
             <br />
             = 30 + 80 + 35 + 200 + 110
             <br />
-            = â‚¹455
+            = Rs 455
           </Equation>
         </>
       );
@@ -1104,7 +1071,7 @@ function Learn() {
           </p>
 
           <h3 style={{ ...styles.heading, marginTop: "22px" }}>
-            Step 1 â€” Calculate Penalties
+            Step 1 - Calculate Penalties
           </h3>
 
           <DataTable
@@ -1168,7 +1135,7 @@ function Learn() {
             <br />
             = 30 + 40 + 50 + 35 + 280
             <br />
-            = â‚¹435
+            = Rs 435
           </Equation>
 
           <div
@@ -1181,7 +1148,7 @@ function Learn() {
               fontWeight: 700,
             }}
           >
-            VAM gives an initial transportation cost of â‚¹435.
+            VAM gives an initial transportation cost of Rs 435.
           </div>
         </>
       );
@@ -1191,7 +1158,7 @@ function Learn() {
       return (
         <>
           <h2 style={styles.sectionTitle}>
-            MODI Method â€” Optimality Test
+            MODI Method - Optimality Test
           </h2>
 
           <p style={styles.muted}>
@@ -1201,7 +1168,7 @@ function Learn() {
           </p>
 
           <h3 style={{ ...styles.heading, marginTop: "25px" }}>
-            Step 1 â€” Check Number of Basic Cells
+            Step 1 - Check Number of Basic Cells
           </h3>
 
           <Equation>
@@ -1218,7 +1185,7 @@ function Learn() {
           </p>
 
           <h3 style={{ ...styles.heading, marginTop: "25px" }}>
-            Step 2 â€” Calculate Potentials
+            Step 2 - Calculate Potentials
           </h3>
 
           <p style={styles.muted}>
@@ -1226,29 +1193,29 @@ function Learn() {
           </p>
 
           <Equation>
-            uáµ¢ + vâ±¼ = cáµ¢â±¼
+            ui + vj = cij
           </Equation>
 
           <p style={styles.muted}>
-            Take uâ‚ = 0.
+            Take u1 = 0.
           </p>
 
           <Equation>
-            uâ‚ = 0
+            u1 = 0
             <br />
-            vâ‚ = 3
+            v1 = 3
             <br />
-            vâ‚‚ = 4
+            v2 = 4
             <br />
-            vâ‚ƒ = 5
+            v3 = 5
             <br />
-            uâ‚‚ = -2
+            u2 = -2
             <br />
-            uâ‚ƒ = 4
+            u3 = 4
           </Equation>
 
           <h3 style={{ ...styles.heading, marginTop: "25px" }}>
-            Step 3 â€” Calculate Opportunity Costs
+            Step 3 - Calculate Opportunity Costs
           </h3>
 
           <p style={styles.muted}>
@@ -1256,7 +1223,7 @@ function Learn() {
           </p>
 
           <Equation>
-            Î”áµ¢â±¼ = cáµ¢â±¼ âˆ’ (uáµ¢ + vâ±¼)
+            Delta ij = cij - (ui + vj)
           </Equation>
 
           <DataTable
@@ -1269,7 +1236,7 @@ function Learn() {
           />
 
           <h3 style={{ ...styles.heading, marginTop: "25px" }}>
-            Step 4 â€” Optimality Condition
+            Step 4 - Optimality Condition
           </h3>
 
           <p style={styles.muted}>
@@ -1290,11 +1257,11 @@ function Learn() {
           >
             <strong>OPTIMAL SOLUTION CONFIRMED</strong>
             <br />
-            All non-basic opportunity costs are â‰¥ 0.
+            All non-basic opportunity costs are &gt;= 0.
           </div>
 
           <Equation>
-            Minimum Transportation Cost = â‚¹435
+            Minimum Transportation Cost = Rs 435
           </Equation>
         </>
       );
@@ -1342,14 +1309,14 @@ function Learn() {
             Highest initial penalty is 3 for S3. The lowest cost in S3 is 8
             at D2.
             <Equation>
-              xâ‚ƒâ‚‚ = 35
+              x32 = 35
             </Equation>
           </Step>
 
           <Step number="3" title="Second Allocation">
             The next selected cell is S2-D1.
             <Equation>
-              xâ‚‚â‚ = 35
+              x21 = 35
             </Equation>
           </Step>
 
@@ -1357,11 +1324,11 @@ function Learn() {
             The remaining 30 units of S1 are distributed equally among the
             remaining demands.
             <Equation>
-              xâ‚â‚ = 10
+              x11 = 10
               <br />
-              xâ‚â‚‚ = 10
+              x12 = 10
               <br />
-              xâ‚â‚ƒ = 10
+              x13 = 10
             </Equation>
           </Step>
 
@@ -1385,26 +1352,26 @@ function Learn() {
               <br />
               Z = 30 + 40 + 50 + 35 + 280
               <br />
-              Z = â‚¹435
+              Z = Rs 435
             </Equation>
           </Step>
 
           <Step number="6" title="Apply MODI">
             Calculate the potentials:
             <Equation>
-              uâ‚ = 0, uâ‚‚ = -2, uâ‚ƒ = 4
+              u1 = 0, u2 = -2, u3 = 4
               <br />
-              vâ‚ = 3, vâ‚‚ = 4, vâ‚ƒ = 5
+              v1 = 3, v2 = 4, v3 = 5
             </Equation>
           </Step>
 
           <Step number="7" title="Check Opportunity Costs">
             <Equation>
-              Î”â‚‚â‚ƒ = 6 âˆ’ (-2 + 5) = 3
+              Delta23 = 6 - (-2 + 5) = 3
               <br />
-              Î”â‚ƒâ‚ = 9 âˆ’ (4 + 3) = 2
+              Delta31 = 9 - (4 + 3) = 2
               <br />
-              Î”â‚ƒâ‚ƒ = 11 âˆ’ (4 + 5) = 2
+              Delta33 = 11 - (4 + 5) = 2
             </Equation>
 
             All are positive. Therefore, the current solution is optimal.
@@ -1433,18 +1400,18 @@ function Learn() {
             <div style={{ color: "#c9f7d8", lineHeight: 1.8 }}>
               Optimal Allocation:
               <br />
-              S1 â†’ D1 = 10
+              S1 -&gt; D1 = 10
               <br />
-              S1 â†’ D2 = 10
+              S1 -&gt; D2 = 10
               <br />
-              S1 â†’ D3 = 10
+              S1 -&gt; D3 = 10
               <br />
-              S2 â†’ D1 = 35
+              S2 -&gt; D1 = 35
               <br />
-              S3 â†’ D2 = 35
+              S3 -&gt; D2 = 35
               <br />
               <br />
-              Minimum Transportation Cost = <strong>â‚¹435</strong>
+              Minimum Transportation Cost = <strong>Rs 435</strong>
             </div>
           </div>
 
@@ -1878,7 +1845,6 @@ function Learn() {
               Select Learning Module
             </h2>
 
-            {/* MODULE SWITCHER */}
             <div
               style={{
                 ...styles.card,
@@ -1913,7 +1879,7 @@ function Learn() {
                   fontWeight: 900,
                 }}
               >
-                MODULE 01 â€” LPP
+                MODULE 01 - LPP
               </button>
 
               <button
@@ -1941,7 +1907,7 @@ function Learn() {
                   fontWeight: 900,
                 }}
               >
-                MODULE 02 â€” TRANSPORTATION
+                MODULE 02 - TRANSPORTATION
               </button>
             </div>
 
@@ -1953,7 +1919,6 @@ function Learn() {
                 alignItems: "start",
               }}
             >
-              {/* TOPIC NAVIGATION */}
               <div
                 style={{
                   ...styles.card,
@@ -2022,7 +1987,6 @@ function Learn() {
                 })}
               </div>
 
-              {/* CONTENT */}
               <div
                 style={{
                   ...styles.card,
@@ -2064,7 +2028,7 @@ function Learn() {
               <h3 style={styles.heading}>LPP</h3>
 
               <Equation>
-                Z = câ‚xâ‚ + câ‚‚xâ‚‚ + ... + câ‚™xâ‚™
+                Z = c1x1 + c2x2 + ... + cnxn
               </Equation>
 
               <h3 style={{ ...styles.heading, marginTop: "25px" }}>
@@ -2072,15 +2036,15 @@ function Learn() {
               </h3>
 
               <Equation>
-                Z = Î£áµ¢Î£â±¼ cáµ¢â±¼xáµ¢â±¼
+                Z = SUM(i)SUM(j) cij xij
               </Equation>
 
               <Equation>
-                uáµ¢ + vâ±¼ = cáµ¢â±¼
+                ui + vj = cij
               </Equation>
 
               <Equation>
-                Î”áµ¢â±¼ = cáµ¢â±¼ âˆ’ (uáµ¢ + vâ±¼)
+                Delta ij = cij - (ui + vj)
               </Equation>
 
               <p style={styles.muted}>
@@ -2118,16 +2082,8 @@ function Learn() {
               }}
             >
               {[
-                [
-                  "LPP",
-                  "Graphical Method",
-                  "/linear-programming",
-                ],
-                [
-                  "LPP",
-                  "Simplex Method",
-                  "/linear-programming",
-                ],
+                ["LPP", "Graphical Method", "/linear-programming"],
+                ["LPP", "Simplex Method", "/linear-programming"],
                 [
                   "Transportation",
                   "North-West Corner",
@@ -2181,7 +2137,7 @@ function Learn() {
                       fontSize: "11px",
                     }}
                   >
-                    OPEN SOLVER â†’
+                    OPEN SOLVER -&gt;
                   </button>
                 </div>
               ))}
@@ -2217,7 +2173,7 @@ function Learn() {
               </h3>
 
               <p style={styles.muted}>
-                Open Concepts â†’ Module 02 â†’ Complete Solved Example to study
+                Open Concepts -&gt; Module 02 -&gt; Complete Solved Example to study
                 the complete VAM + MODI calculation using the transportation
                 table provided in this learning system.
               </p>
@@ -2315,7 +2271,7 @@ function Learn() {
               margin: "8px 0 20px",
             }}
           >
-            Learn â†’ Practice â†’ Solve
+            Learn -&gt; Practice -&gt; Solve
           </h2>
 
           <div
@@ -2551,7 +2507,7 @@ function Learn() {
               fontSize: "11px",
             }}
           >
-            OR SMART SOLVER â€¢ LEARNING SYSTEM
+            OR SMART SOLVER | LEARNING SYSTEM
           </div>
 
           <div
@@ -2560,7 +2516,7 @@ function Learn() {
               fontSize: "11px",
             }}
           >
-            LPP â€¢ TRANSPORTATION â€¢ ASSIGNMENT
+            LPP | TRANSPORTATION | ASSIGNMENT
           </div>
         </div>
       </section>
