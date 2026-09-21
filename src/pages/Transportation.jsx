@@ -116,22 +116,22 @@ function Transportation() {
 
       if (method === "north_west") {
         endpoint =
-          "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/transportation/north-west";
+          "http://127.0.0.1:5000/api/transportation/north-west";
       }
 
       if (method === "least_cost") {
         endpoint =
-          "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/transportation/least-cost";
+          "http://127.0.0.1:5000/api/transportation/least-cost";
       }
 
       if (method === "vogel") {
         endpoint =
-          "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/transportation/vogel";
+          "http://127.0.0.1:5000/api/transportation/vogel";
       }
 
       if (method === "modi") {
         endpoint =
-          "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/transportation/modi";
+          "http://127.0.0.1:5000/api/transportation/modi";
       }
 
       const response = await axios.post(endpoint, {
@@ -212,7 +212,7 @@ function Transportation() {
         ? terms
             .map(
               (term) =>
-                `${formatNumber(term.quantity)} Ã— ${formatNumber(term.cost)}`
+                `${formatNumber(term.quantity)} × ${formatNumber(term.cost)}`
             )
             .join(" + ")
         : "No positive allocation";
@@ -296,6 +296,7 @@ function Transportation() {
   const TruckGraphic = () => {
     return (
       <div
+        className="transport-truck-graphic"
         style={{
           position: "relative",
           width: "100%",
@@ -521,7 +522,7 @@ function Transportation() {
           }}
         >
           <span style={{ color: colors.cyan }}>
-            â—
+            ●
           </span>{" "}
           SOURCE
         </div>
@@ -543,7 +544,7 @@ function Transportation() {
           }}
         >
           <span style={{ color: colors.green }}>
-            â—
+            ●
           </span>{" "}
           DESTINATION
         </div>
@@ -763,6 +764,7 @@ function Transportation() {
 
   return (
     <div
+      className="or-transport-page"
       style={{
         minHeight: "100vh",
         background: colors.bg,
@@ -779,6 +781,180 @@ function Transportation() {
           padding: "0 26px 50px",
         }}
       >
+        <style>{`
+          /* =====================================================
+             MOBILE-ONLY PROFESSIONAL LAYOUT
+             Desktop/PC styles remain unchanged.
+          ====================================================== */
+          @media (max-width: 767.98px) {
+            .or-transport-page {
+              width: 100% !important;
+              max-width: 100% !important;
+              overflow-x: hidden !important;
+              padding-bottom: 28px !important;
+            }
+
+            .or-transport-page > .container-fluid {
+              width: 100% !important;
+              max-width: 100% !important;
+              padding-left: 10px !important;
+              padding-right: 10px !important;
+              padding-bottom: 28px !important;
+            }
+
+            .or-transport-page .transport-hero-copy {
+              width: 100% !important;
+              padding: 25px 22px 22px !important;
+              min-height: auto !important;
+            }
+
+            .or-transport-page .transport-hero-copy h1 {
+              font-size: clamp(2.05rem, 8.7vw, 2.8rem) !important;
+              line-height: 1.03 !important;
+              letter-spacing: -1.4px !important;
+            }
+
+            .or-transport-page .transport-hero-copy p {
+              max-width: none !important;
+              font-size: 13px !important;
+              line-height: 1.65 !important;
+              margin-top: 15px !important;
+              margin-bottom: 0 !important;
+            }
+
+            .or-transport-page .transport-hero-copy > .d-flex {
+              width: 100% !important;
+              display: grid !important;
+              grid-template-columns: 1fr !important;
+              gap: 9px !important;
+              margin-top: 18px !important;
+            }
+
+            .or-transport-page .transport-hero-copy > .d-flex > div {
+              width: 100% !important;
+              min-height: 48px !important;
+              padding: 10px 13px !important;
+              justify-content: flex-start !important;
+              font-size: 11px !important;
+              border-radius: 7px !important;
+            }
+
+            .or-transport-page .transport-hero-copy > .d-flex > div span {
+              min-width: 22px !important;
+              text-align: center !important;
+            }
+
+            .or-transport-page .transport-hero-graphic {
+              width: 100% !important;
+              min-height: 295px !important;
+              height: 295px !important;
+              max-height: 295px !important;
+              padding: 0 !important;
+              overflow: hidden !important;
+            }
+
+            .or-transport-page .transport-truck-graphic {
+              width: 100% !important;
+              height: 295px !important;
+              min-height: 295px !important;
+              max-height: 295px !important;
+            }
+
+            .or-transport-page .transport-truck-graphic > svg {
+              width: 100% !important;
+              height: 100% !important;
+            }
+
+            .or-transport-page .transport-truck-graphic [style*='fontSize: "19px"'] {
+              font-size: 16px !important;
+            }
+
+            .or-transport-page .transport-truck-graphic [style*='fontSize: "9px"'] {
+              font-size: 8px !important;
+            }
+
+            .or-transport-page .row.g-3 {
+              --bs-gutter-x: 0.65rem !important;
+              --bs-gutter-y: 0.65rem !important;
+              margin-left: 0 !important;
+              margin-right: 0 !important;
+            }
+
+            .or-transport-page .row.g-3 > [class*="col-"] {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+            }
+
+            .or-transport-page [style*='padding: "17px 19px"'] {
+              padding: 15px 16px !important;
+            }
+
+            .or-transport-page [style*='padding: "18px"'] {
+              padding: 14px !important;
+            }
+
+            .or-transport-page table {
+              font-size: 11px !important;
+            }
+
+            .or-transport-page .table-responsive,
+            .or-transport-page [style*='overflowX: "auto"'] {
+              max-width: 100% !important;
+              overflow-x: auto !important;
+              -webkit-overflow-scrolling: touch !important;
+            }
+
+            .or-transport-page input,
+            .or-transport-page select,
+            .or-transport-page button {
+              max-width: 100% !important;
+            }
+
+            .or-transport-page .form-control,
+            .or-transport-page .form-select {
+              min-height: 42px !important;
+              font-size: 13px !important;
+            }
+
+            .or-transport-page .col-xl-8,
+            .or-transport-page .col-xl-4 {
+              width: 100% !important;
+              flex: 0 0 100% !important;
+            }
+
+            .or-transport-page h2,
+            .or-transport-page h3 {
+              overflow-wrap: anywhere !important;
+            }
+
+            .or-transport-page button {
+              white-space: normal !important;
+            }
+          }
+
+          @media (max-width: 420px) {
+            .or-transport-page > .container-fluid {
+              padding-left: 8px !important;
+              padding-right: 8px !important;
+            }
+
+            .or-transport-page .transport-hero-copy {
+              padding: 22px 18px 19px !important;
+            }
+
+            .or-transport-page .transport-hero-copy h1 {
+              font-size: 2.05rem !important;
+            }
+
+            .or-transport-page .transport-hero-graphic,
+            .or-transport-page .transport-truck-graphic {
+              height: 275px !important;
+              min-height: 275px !important;
+              max-height: 275px !important;
+            }
+          }
+        `}</style>
+
         {/* ======================================================
             TOP NAV
         ======================================================= */}
@@ -845,7 +1021,7 @@ function Transportation() {
                 fontWeight: "700",
               }}
             >
-              â— System Online
+              ● System Online
             </div>
 
             <div
@@ -854,7 +1030,7 @@ function Transportation() {
                 fontSize: "18px",
               }}
             >
-              âš™
+              ⚙
             </div>
 
             <div
@@ -895,7 +1071,7 @@ function Transportation() {
             style={{ minHeight: "315px" }}
           >
             <div
-              className="col-lg-4"
+              className="col-lg-4 transport-hero-copy"
               style={{
                 padding: "34px 38px",
                 background:
@@ -956,9 +1132,9 @@ function Transportation() {
                 style={{ marginTop: "22px" }}
               >
                 {[
-                  ["â–£", "4 Methods"],
-                  ["âŒ", "Step-by-Step Analysis"],
-                  ["â—Ž", "Optimal Solutions"],
+                  ["▣", "4 Methods"],
+                  ["⌁", "Step-by-Step Analysis"],
+                  ["◎", "Optimal Solutions"],
                 ].map((item, i) => (
                   <div
                     key={i}
@@ -993,7 +1169,7 @@ function Transportation() {
             </div>
 
             <div
-              className="col-lg-8"
+              className="col-lg-8 transport-hero-graphic"
               style={{
                 minHeight: "315px",
               }}
@@ -1443,7 +1619,7 @@ function Transportation() {
                         }}
                       >
                         {isBalanced
-                          ? "âœ“"
+                          ? "✓"
                           : "!"}
                       </div>
 
@@ -1502,7 +1678,7 @@ function Transportation() {
                             : "none",
                       }}
                     >
-                      â–¶ &nbsp; Solve Transportation Problem â†’
+                      ▶ &nbsp; Solve Transportation Problem →
                     </button>
                   </div>
                 </div>
@@ -1682,8 +1858,8 @@ function Transportation() {
                             }}
                           >
                             {result.optimal
-                              ? "â— OPTIMAL SOLUTION"
-                              : "â— NOT YET OPTIMAL"}
+                              ? "● OPTIMAL SOLUTION"
+                              : "● NOT YET OPTIMAL"}
                           </div>
                         )}
                       </div>
@@ -1727,7 +1903,7 @@ function Transportation() {
                           marginTop: "3px",
                         }}
                       >
-                        SOURCE â†’ DESTINATION QUANTITY
+                        SOURCE → DESTINATION QUANTITY
                       </div>
                     </div>
 
@@ -2018,7 +2194,7 @@ function Transportation() {
                                   "800",
                               }}
                             >
-                              Opportunity Cost (Î”)
+                              Opportunity Cost (Δ)
                             </div>
 
                             <div
@@ -2031,7 +2207,7 @@ function Transportation() {
                                   "3px",
                               }}
                             >
-                              OPTIMAL SOLUTION REQUIRES Î” â‰¥ 0
+                              OPTIMAL SOLUTION REQUIRES Δ ≥ 0
                             </div>
                           </div>
 
@@ -2208,7 +2384,7 @@ function Transportation() {
                         letterSpacing: ".6px",
                       }}
                     >
-                      EXAM-STYLE WORKING â€¢ {stepData.methodName.toUpperCase()}
+                      EXAM-STYLE WORKING • {stepData.methodName.toUpperCase()}
                     </div>
                   </div>
                 </div>
@@ -2243,7 +2419,7 @@ function Transportation() {
                       color: "#173f59",
                     }}
                   >
-                    Step 1 â€” Given Transportation Data
+                    Step 1 — Given Transportation Data
                   </div>
 
                   <div
@@ -2311,7 +2487,7 @@ function Transportation() {
                       color: "#173f59",
                     }}
                   >
-                    Step 2 â€” Check Whether the Problem is Balanced
+                    Step 2 — Check Whether the Problem is Balanced
                   </div>
 
                   <div
@@ -2331,7 +2507,7 @@ function Transportation() {
                     <b>
                       {isBalanced
                         ? "Total Supply = Total Demand"
-                        : "Total Supply â‰  Total Demand"}
+                        : "Total Supply ≠ Total Demand"}
                     </b>
                   </div>
 
@@ -2355,8 +2531,8 @@ function Transportation() {
                     }}
                   >
                     {isBalanced
-                      ? "âœ“ Balanced transportation problem â€” proceed with the selected method."
-                      : "âš  The problem is not balanced, so a valid transportation solution cannot be calculated from the current data."}
+                      ? "✓ Balanced transportation problem — proceed with the selected method."
+                      : "⚠ The problem is not balanced, so a valid transportation solution cannot be calculated from the current data."}
                   </div>
                 </div>
 
@@ -2380,7 +2556,7 @@ function Transportation() {
                       color: "#173f59",
                     }}
                   >
-                    Step 3 â€” Obtain the Initial Allocation
+                    Step 3 — Obtain the Initial Allocation
                   </div>
 
                   <div
@@ -2515,7 +2691,7 @@ function Transportation() {
                       color: "#173f59",
                     }}
                   >
-                    Step 4 â€” Calculate Transportation Cost
+                    Step 4 — Calculate Transportation Cost
                   </div>
 
                   <div
@@ -2528,7 +2704,7 @@ function Transportation() {
                         color: "#294456",
                     }}
                   >
-                    <b>Total Cost</b> = Î£ (Allocation Ã— Unit
+                    <b>Total Cost</b> = Σ (Allocation × Unit
                     Transportation Cost)
                   </div>
 
@@ -2568,7 +2744,7 @@ function Transportation() {
                   </div>
                 </div>
 
-                {/* Step 5 â€” MODI */}
+                {/* Step 5 — MODI */}
                 <div
                   style={{
                     padding: "16px 17px",
@@ -2588,7 +2764,7 @@ function Transportation() {
                       color: "#173f59",
                     }}
                   >
-                    Step 5 â€” MODI Optimality Analysis
+                    Step 5 — MODI Optimality Analysis
                   </div>
 
                   {result.u && result.v ? (
@@ -2605,7 +2781,7 @@ function Transportation() {
                       >
                         For every occupied cell, use:
                         <br />
-                        <b>uáµ¢ + vâ±¼ = cáµ¢â±¼</b>
+                        <b>uᵢ + vⱼ = cᵢⱼ</b>
                         <br />
                         Take one potential as zero and calculate the
                         remaining U and V values.
@@ -2670,7 +2846,7 @@ function Transportation() {
                       >
                         For an unoccupied cell:
                         <br />
-                        <b>Î”áµ¢â±¼ = cáµ¢â±¼ âˆ’ (uáµ¢ + vâ±¼)</b>
+                        <b>Δᵢⱼ = cᵢⱼ − (uᵢ + vⱼ)</b>
                       </div>
 
                       {result.opportunity_costs && (
@@ -2700,7 +2876,7 @@ function Transportation() {
                                     color: "#173f59",
                                   }}
                                 >
-                                  Î”
+                                  Δ
                                 </th>
 
                                 {Array.from(
@@ -2795,8 +2971,8 @@ function Transportation() {
                         }}
                       >
                         {result.optimal === true
-                          ? "âœ“ Since all opportunity costs are non-negative (Î” â‰¥ 0), the current solution is optimal."
-                          : "â†’ At least one negative opportunity cost indicates that further improvement may be possible."}
+                          ? "✓ Since all opportunity costs are non-negative (Δ ≥ 0), the current solution is optimal."
+                          : "→ At least one negative opportunity cost indicates that further improvement may be possible."}
                       </div>
                     </>
                   ) : (
@@ -2918,7 +3094,7 @@ function Transportation() {
                       marginRight: "8px",
                     }}
                   >
-                    ÏŸ
+                    ϟ
                   </span>
                   Methods Available
                 </div>
@@ -3050,7 +3226,7 @@ function Transportation() {
                           fontSize: "17px",
                         }}
                       >
-                        â€º
+                        ›
                       </div>
                     </div>
                   );
@@ -3086,7 +3262,7 @@ function Transportation() {
                       marginRight: "8px",
                     }}
                   >
-                    â™§
+                    ♧
                   </span>
                   Quick Tips
                 </div>
@@ -3097,7 +3273,7 @@ function Transportation() {
                   "Total supply must equal total demand",
                   "Transportation costs should be non-negative",
                   "MODI starts with an initial feasible solution",
-                  "Optimal solution has all Î” â‰¥ 0",
+                  "Optimal solution has all Δ ≥ 0",
                 ].map((tip, index) => (
                   <div
                     key={index}
@@ -3116,7 +3292,7 @@ function Transportation() {
                         fontSize: "13px",
                       }}
                     >
-                      âœ“
+                      ✓
                     </span>
 
                     <span
@@ -3158,7 +3334,7 @@ function Transportation() {
                     fontWeight: "900",
                   }}
                 >
-                  â—ˆ
+                  ◈
                 </div>
 
                 <div

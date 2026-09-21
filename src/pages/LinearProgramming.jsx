@@ -1321,6 +1321,7 @@ function LinearProgramming() {
 
   return (
     <div
+      className="lpp-page-shell"
       style={{
         minHeight: "100vh",
         background: "#06142f",
@@ -1331,140 +1332,313 @@ function LinearProgramming() {
       }}
     >
       <style>{`
-        @media (max-width: 768px) {
-          html,
-          body,
-          #root {
-            width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
+        /* =====================================================
+           LPP MOBILE PROFESSIONAL LAYOUT
+           Desktop remains unchanged.
+        ====================================================== */
+        @media (max-width: 767px) {
+          .lpp-page-shell {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            padding-bottom: 34px !important;
           }
 
-          *,
-          *::before,
-          *::after {
+          .lpp-page-shell * {
             box-sizing: border-box;
           }
 
-          main {
+          .lpp-page-shell [style*="max-width: 1320px"] {
+            width: calc(100% - 10px) !important;
+            max-width: none !important;
+            margin-left: 5px !important;
+            margin-right: 5px !important;
+          }
+
+          .lpp-page-shell > div:first-child > div {
+            padding: 10px 14px !important;
+          }
+
+          .lpp-page-shell > div:first-child > div > div:first-child {
+            gap: 9px !important;
+          }
+
+          .lpp-page-shell > div:first-child > div > div:first-child > div:first-child {
+            width: 34px !important;
+            height: 34px !important;
+            font-size: 15px !important;
+            flex-shrink: 0 !important;
+          }
+
+          .lpp-page-shell > div:first-child > div > div:first-child > div:last-child > div:first-child {
+            font-size: 11px !important;
+          }
+
+          .lpp-page-shell > div:first-child > div > div:first-child > div:last-child > div:last-child {
+            font-size: 8px !important;
+          }
+
+          .lpp-page-shell > div:first-child > div > div:last-child {
+            font-size: 8px !important;
+            gap: 6px !important;
+            white-space: nowrap !important;
+          }
+
+          .lpp-page-shell main {
+            width: calc(100% - 10px) !important;
+            max-width: none !important;
+            margin: 0 5px !important;
+            padding: 16px 0 30px !important;
+          }
+
+          /* Hero */
+          .lpp-page-shell main > section:first-child {
+            min-height: 0 !important;
+            padding: 22px 14px !important;
+            margin-bottom: 16px !important;
+            border-radius: 10px !important;
+          }
+
+          .lpp-page-shell main > section:first-child > div:nth-child(3) {
+            max-width: 100% !important;
+          }
+
+          .lpp-page-shell main > section:first-child h1 {
+            font-size: 31px !important;
+            line-height: 1.08 !important;
+            letter-spacing: -0.02em !important;
+          }
+
+          .lpp-page-shell main > section:first-child p {
+            max-width: 100% !important;
+            font-size: 12px !important;
+            line-height: 1.55 !important;
+            margin-top: 13px !important;
+          }
+
+          .lpp-page-shell main > section:first-child > div:nth-child(3) > div:last-child {
+            gap: 6px !important;
+            margin-top: 16px !important;
+          }
+
+          .lpp-page-shell main > section:first-child > div:nth-child(3) > div:last-child span {
+            padding: 6px 8px !important;
+            font-size: 7px !important;
+          }
+
+          /* Compact graphical decoration instead of letting it crowd the text. */
+          .lpp-page-shell main > section:first-child > div:last-child {
+            position: relative !important;
+            right: auto !important;
+            bottom: auto !important;
+            width: 100% !important;
+            height: 92px !important;
+            margin-top: 12px !important;
+            opacity: .55 !important;
+          }
+
+          .lpp-page-shell main > section:first-child > div:last-child > div {
+            transform: scale(.58) !important;
+            transform-origin: left bottom !important;
+          }
+
+          /* KPI strip: two clean columns on phones. */
+          .lpp-page-shell main > section:nth-child(2) {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 8px !important;
+            margin-bottom: 16px !important;
+          }
+
+          .lpp-page-shell main > section:nth-child(2) > div {
+            min-height: 74px !important;
+            padding: 11px 12px !important;
+          }
+
+          /* All form panels */
+          .lpp-page-shell main > form > section {
             width: 100% !important;
             max-width: 100% !important;
-            padding: 22px 14px 45px !important;
-            overflow-x: hidden !important;
-          }
-
-          main > div,
-          main section,
-          main article {
-            max-width: 100% !important;
-            min-width: 0 !important;
-          }
-
-          main [style*="grid-template-columns"] {
-            min-width: 0 !important;
-          }
-
-          main [style*="repeat(4, minmax(0, 1fr))"],
-          main [style*="repeat(3, minmax(0, 1fr))"],
-          main [style*="repeat(2, minmax(0, 1fr))"],
-          main [style*="1.05fr 1fr 1fr"],
-          main [style*="0.82fr 1.18fr"] {
-            grid-template-columns: 1fr !important;
-          }
-
-          main [style*="65px 1fr 1fr 150px 1fr 115px"] {
-            grid-template-columns: 42px minmax(0, 1fr) minmax(0, 1fr) !important;
-            gap: 10px !important;
-          }
-
-          main [style*="650px"],
-          main [style*="760px"] {
-            max-width: 100% !important;
-          }
-
-          main table {
-            display: block !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          main table thead,
-          main table tbody {
-            min-width: 520px;
-          }
-
-          main input,
-          main select,
-          main textarea {
-            max-width: 100% !important;
-            min-width: 0 !important;
-          }
-
-          main button {
-            max-width: 100%;
-          }
-
-          main [style*="height: 500px"] {
-            height: 350px !important;
-            padding: 10px !important;
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+            border-radius: 9px !important;
             overflow: hidden !important;
           }
 
-          main [style*="maxWidth: \"1320px\""] {
+          .lpp-page-shell main > form > section h2 {
+            font-size: 16px !important;
+            line-height: 1.2 !important;
+          }
+
+          .lpp-page-shell main > form > section p {
+            font-size: 9px !important;
+            line-height: 1.45 !important;
+          }
+
+          /* Any desktop grid becomes a controlled mobile stack. */
+          .lpp-page-shell [style*="grid-template-columns"] {
+            grid-template-columns: minmax(0, 1fr) !important;
+            gap: 10px !important;
+          }
+
+          /* KPI override comes after the generic grid rule. */
+          .lpp-page-shell main > section:nth-child(2) {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .lpp-page-shell input,
+          .lpp-page-shell select,
+          .lpp-page-shell textarea,
+          .lpp-page-shell button {
             max-width: 100% !important;
           }
 
-          main h1 {
-            font-size: clamp(28px, 8vw, 38px) !important;
-            line-height: 1.08 !important;
+          .lpp-page-shell input,
+          .lpp-page-shell select {
+            min-height: 44px !important;
+            font-size: 14px !important;
           }
 
-          main h2 {
-            font-size: clamp(22px, 6vw, 30px) !important;
-            line-height: 1.15 !important;
+          .lpp-page-shell textarea {
+            min-height: 120px !important;
+            font-size: 13px !important;
           }
 
-          main h3 {
-            font-size: clamp(18px, 5vw, 24px) !important;
+          /* Constraint rows should read vertically instead of becoming a tiny table. */
+          .lpp-page-shell [style*="65px 1fr 1fr 150px 1fr 115px"] {
+            grid-template-columns: 1fr 1fr !important;
           }
 
-          main p {
+          /* Prevent fixed-width tables from crushing the page. */
+          .lpp-page-shell [style*="minWidth: "] {
+            min-width: 0 !important;
+          }
+
+          .lpp-page-shell table {
+            font-size: 10px !important;
+          }
+
+          .lpp-page-shell table th,
+          .lpp-page-shell table td {
+            padding: 8px 6px !important;
+            white-space: nowrap !important;
+          }
+
+          .lpp-page-shell .table-responsive,
+          .lpp-page-shell [style*="overflowX"] {
             max-width: 100% !important;
-            overflow-wrap: anywhere;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
           }
 
-          main [style*="fontSize: \"42px\""] {
-            font-size: 30px !important;
+          /* Result cards */
+          .lpp-page-shell canvas {
+            max-width: 100% !important;
+            height: auto !important;
           }
 
-          main [style*="fontSize: \"20px\""] {
+          .lpp-page-shell [style*="fontSize: \"31px\""] {
+            font-size: 24px !important;
+          }
+
+          /* Keep long equations readable without overflowing the viewport. */
+          .lpp-page-shell [style*="Georgia"] {
             font-size: 17px !important;
+            line-height: 1.45 !important;
+            overflow-wrap: anywhere !important;
           }
 
-          main [style*="padding: \"34px 28px\""] {
-            padding: 22px 14px 40px !important;
+          /* Full-width mobile composition: use almost the entire phone viewport. */
+          .lpp-page-shell main > section,
+          .lpp-page-shell main > form > section,
+          .lpp-page-shell main > section:first-child,
+          .lpp-page-shell main > section:nth-child(2) {
+            width: 100% !important;
+            max-width: none !important;
           }
-        }
+
+          .lpp-page-shell main > section:first-child {
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+          }
+
+          .lpp-page-shell main > form > section {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+          }
+
+          /* Footer/status strip */
+          .lpp-page-shell main > main {
+            width: 100% !important;
+          }
+        
+
+  /* =========================================================
+     MOBILE OBJECTIVE INPUT LAYOUT
+     Optimization = full row
+     X + Y coefficients = same row
+  ========================================================= */
+  .lpp-page-shell .objective-input-grid {
+    display: grid !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    gap: 14px 12px !important;
+  }
+
+  .lpp-page-shell .objective-input-grid > * {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .lpp-page-shell .objective-input-grid > :first-child {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+  }
+
+  .lpp-page-shell .objective-input-grid > :nth-child(2) {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+
+  .lpp-page-shell .objective-input-grid > :nth-child(3) {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+  }
+
+  .lpp-page-shell .objective-input-grid input,
+  .lpp-page-shell .objective-input-grid select {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
 
         @media (max-width: 420px) {
-          main {
-            padding-left: 10px !important;
-            padding-right: 10px !important;
+          .lpp-page-shell main {
+            width: calc(100% - 8px) !important;
+            margin: 0 4px !important;
           }
 
-          main [style*="padding: \"15px 28px\""] {
-            padding: 12px 14px !important;
+          .lpp-page-shell main > section:first-child {
+            padding: 20px 12px !important;
           }
 
-          main [style*="height: 500px"] {
-            height: 315px !important;
-            padding: 7px !important;
+          .lpp-page-shell main > section:first-child h1 {
+            font-size: 28px !important;
+          }
+
+          .lpp-page-shell main > section:nth-child(2) > div {
+            min-height: 70px !important;
+            padding: 10px !important;
+          }
+
+          .lpp-page-shell main > form > section {
+            padding: 14px !important;
           }
         }
       `}</style>
-
       {/* ===================================================
           TOP SYSTEM BAR
       =================================================== */}
@@ -2203,6 +2377,7 @@ function LinearProgramming() {
             />
 
             <div
+              className="objective-input-grid"
               style={{
                 display:
                   "grid",

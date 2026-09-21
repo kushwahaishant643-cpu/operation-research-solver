@@ -1514,7 +1514,36 @@ function Learn() {
   };
 
   return (
-    <div style={styles.page}>
+    <>
+      <style>{`
+        @media (max-width: 767px) {
+          .learn-concepts-grid {
+            grid-template-columns: minmax(0, 1fr) !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+          }
+          .learn-concepts-grid > * {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+          }
+          .learn-concepts-sidebar {
+            position: static !important;
+            width: 100% !important;
+            min-width: 0 !important;
+          }
+          .learn-concepts-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+          }
+        }
+      `}</style>
+      <div style={styles.page}>
       {/* HERO */}
       <section
         style={{
@@ -1912,6 +1941,7 @@ function Learn() {
             </div>
 
             <div
+              className="learn-concepts-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "260px 1fr",
@@ -1920,6 +1950,7 @@ function Learn() {
               }}
             >
               <div
+                className="learn-concepts-sidebar"
                 style={{
                   ...styles.card,
                   padding: "12px",
@@ -1988,6 +2019,7 @@ function Learn() {
               </div>
 
               <div
+                className="learn-concepts-content"
                 style={{
                   ...styles.card,
                   padding: "30px",
@@ -2520,7 +2552,8 @@ function Learn() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }
 
