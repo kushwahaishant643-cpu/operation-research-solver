@@ -685,6 +685,51 @@ function LinearProgramming() {
     );
   };
 
+  const [parsingWordProblem, setParsingWordProblem] = useState(false);
+
+  const generateMathematicalModel = async () => {
+    if (!problemStatement.trim()) {
+      setError("Please enter the word problem first.");
+      return;
+    }
+
+    setParsingWordProblem(true);
+    setError("");
+    setResult(null);
+    setSimplexResult(null);
+
+    try {
+      const response = await axios.post(
+        "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/lpp/parse-word-problem",
+        { problem_statement: problemStatement }
+      );
+      const data = response.data || {};
+      if (data.status === "needs_confirmation") {
+        setError(data.message || "Please confirm the mathematical model.");
+        return;
+      }
+      if (data.status !== "success") {
+        setError(data.message || "Unable to generate the mathematical model.");
+        return;
+      }
+      const model = data.model || data;
+      const obj = model.objective || {};
+      const parsedConstraints = model.constraints || [];
+      setObjective({ x1: String(obj.x1 ?? obj[0] ?? ""), x2: String(obj.x2 ?? obj[1] ?? "") });
+      setOptimization(model.optimization || "max");
+      setConstraints(parsedConstraints.map((c) => ({
+        x1: String(c.x1 ?? c.coefficients?.[0] ?? ""),
+        x2: String(c.x2 ?? c.coefficients?.[1] ?? ""),
+        operator: c.operator || "<=",
+        rhs: String(c.rhs ?? ""),
+      })));
+    } catch (err) {
+      setError(err.response?.data?.message || "Unable to connect to the word-problem parser. Make sure Flask is running.");
+    } finally {
+      setParsingWordProblem(false);
+    }
+  };
+
   /* =======================================================
      GRAPH OPTIONS
   ======================================================= */
@@ -1210,16 +1255,13 @@ function LinearProgramming() {
 
   const exportExcel = async () => {
     if (!result) {
-      setError(
-        "Please solve the LPP before exporting the Excel sheet."
-      );
+      setError("Please solve the LPP before exporting the Excel sheet.");
       return;
     }
 
-    try {
-      setError("");
-      setLoading(true);
+    setError("");
 
+    try {
       const requestData = {
         problem_statement:
           problemStatement ||
@@ -1240,70 +1282,66 @@ function LinearProgramming() {
         })),
 
         result: {
-          optimal_solution:
-            result.optimal_solution || null,
-
-          corner_points:
-            result.corner_points || [],
-
-          feasible_region:
-            result.feasible_region || [],
-
-          graph_constraints:
-            result.graph_constraints || [],
+          optimal_solution: result.optimal_solution || null,
+          corner_points: result.corner_points || [],
+          feasible_region: result.feasible_region || [],
+          graph_constraints: result.graph_constraints || [],
         },
       };
 
       const response = await axios.post(
-        "http://127.0.0.1:5000/api/lpp/export-excel",
+        "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/lpp/export-excel",
         requestData,
         {
           responseType: "blob",
         }
       );
 
-      const blob = new Blob(
-        [response.data],
-        {
-          type:
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        }
-      );
+      const contentType =
+        response.headers?.["content-type"] ||
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-      const url =
-        window.URL.createObjectURL(blob);
+      const blob = new Blob([response.data], {
+        type: contentType,
+      });
 
-      const link =
-        document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
 
       link.href = url;
-      link.download =
-        "OR_LPP_Practical.xlsx";
+      link.download = "OR_LPP_Practical_Solution.xlsx";
 
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      window.URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);
     } catch (err) {
-      console.error(
-        "Excel export error:",
-        err
-      );
+      let message =
+        "Unable to generate the Excel practical sheet.";
 
-      if (err.response) {
-        setError(
-          "Unable to generate Excel file from backend."
-        );
-      } else {
-        setError(
-          "Backend is not connected. Please make sure Flask server is running."
-        );
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const parsed = JSON.parse(text);
+          message =
+            parsed?.message ||
+            parsed?.error ||
+            message;
+        } catch {
+          // Keep the default error message.
+        }
+      } else if (err.response?.data?.message) {
+        message = err.response.data.message;
+      } else if (err.message) {
+        message = err.message;
       }
-    } finally {
-      setLoading(false);
+
+      setError(
+        message
+      );
     }
-  };;
+  };
 
   /* =======================================================
      COUNTS
@@ -1321,7 +1359,6 @@ function LinearProgramming() {
 
   return (
     <div
-      className="lpp-page-shell"
       style={{
         minHeight: "100vh",
         background: "#06142f",
@@ -1331,314 +1368,6 @@ function LinearProgramming() {
         paddingBottom: "70px",
       }}
     >
-      <style>{`
-        /* =====================================================
-           LPP MOBILE PROFESSIONAL LAYOUT
-           Desktop remains unchanged.
-        ====================================================== */
-        @media (max-width: 767px) {
-          .lpp-page-shell {
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow-x: hidden !important;
-            padding-bottom: 34px !important;
-          }
-
-          .lpp-page-shell * {
-            box-sizing: border-box;
-          }
-
-          .lpp-page-shell [style*="max-width: 1320px"] {
-            width: calc(100% - 10px) !important;
-            max-width: none !important;
-            margin-left: 5px !important;
-            margin-right: 5px !important;
-          }
-
-          .lpp-page-shell > div:first-child > div {
-            padding: 10px 14px !important;
-          }
-
-          .lpp-page-shell > div:first-child > div > div:first-child {
-            gap: 9px !important;
-          }
-
-          .lpp-page-shell > div:first-child > div > div:first-child > div:first-child {
-            width: 34px !important;
-            height: 34px !important;
-            font-size: 15px !important;
-            flex-shrink: 0 !important;
-          }
-
-          .lpp-page-shell > div:first-child > div > div:first-child > div:last-child > div:first-child {
-            font-size: 11px !important;
-          }
-
-          .lpp-page-shell > div:first-child > div > div:first-child > div:last-child > div:last-child {
-            font-size: 8px !important;
-          }
-
-          .lpp-page-shell > div:first-child > div > div:last-child {
-            font-size: 8px !important;
-            gap: 6px !important;
-            white-space: nowrap !important;
-          }
-
-          .lpp-page-shell main {
-            width: calc(100% - 10px) !important;
-            max-width: none !important;
-            margin: 0 5px !important;
-            padding: 16px 0 30px !important;
-          }
-
-          /* Hero */
-          .lpp-page-shell main > section:first-child {
-            min-height: 0 !important;
-            padding: 22px 14px !important;
-            margin-bottom: 16px !important;
-            border-radius: 10px !important;
-          }
-
-          .lpp-page-shell main > section:first-child > div:nth-child(3) {
-            max-width: 100% !important;
-          }
-
-          .lpp-page-shell main > section:first-child h1 {
-            font-size: 31px !important;
-            line-height: 1.08 !important;
-            letter-spacing: -0.02em !important;
-          }
-
-          .lpp-page-shell main > section:first-child p {
-            max-width: 100% !important;
-            font-size: 12px !important;
-            line-height: 1.55 !important;
-            margin-top: 13px !important;
-          }
-
-          .lpp-page-shell main > section:first-child > div:nth-child(3) > div:last-child {
-            gap: 6px !important;
-            margin-top: 16px !important;
-          }
-
-          .lpp-page-shell main > section:first-child > div:nth-child(3) > div:last-child span {
-            padding: 6px 8px !important;
-            font-size: 7px !important;
-          }
-
-          /* Compact graphical decoration instead of letting it crowd the text. */
-          .lpp-page-shell main > section:first-child > div:last-child {
-            position: relative !important;
-            right: auto !important;
-            bottom: auto !important;
-            width: 100% !important;
-            height: 92px !important;
-            margin-top: 12px !important;
-            opacity: .55 !important;
-          }
-
-          .lpp-page-shell main > section:first-child > div:last-child > div {
-            transform: scale(.58) !important;
-            transform-origin: left bottom !important;
-          }
-
-          /* KPI strip: two clean columns on phones. */
-          .lpp-page-shell main > section:nth-child(2) {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: 8px !important;
-            margin-bottom: 16px !important;
-          }
-
-          .lpp-page-shell main > section:nth-child(2) > div {
-            min-height: 74px !important;
-            padding: 11px 12px !important;
-          }
-
-          /* All form panels */
-          .lpp-page-shell main > form > section {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 16px !important;
-            margin-bottom: 12px !important;
-            border-radius: 9px !important;
-            overflow: hidden !important;
-          }
-
-          .lpp-page-shell main > form > section h2 {
-            font-size: 16px !important;
-            line-height: 1.2 !important;
-          }
-
-          .lpp-page-shell main > form > section p {
-            font-size: 9px !important;
-            line-height: 1.45 !important;
-          }
-
-          /* Any desktop grid becomes a controlled mobile stack. */
-          .lpp-page-shell [style*="grid-template-columns"] {
-            grid-template-columns: minmax(0, 1fr) !important;
-            gap: 10px !important;
-          }
-
-          /* KPI override comes after the generic grid rule. */
-          .lpp-page-shell main > section:nth-child(2) {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-          }
-
-          .lpp-page-shell input,
-          .lpp-page-shell select,
-          .lpp-page-shell textarea,
-          .lpp-page-shell button {
-            max-width: 100% !important;
-          }
-
-          .lpp-page-shell input,
-          .lpp-page-shell select {
-            min-height: 44px !important;
-            font-size: 14px !important;
-          }
-
-          .lpp-page-shell textarea {
-            min-height: 120px !important;
-            font-size: 13px !important;
-          }
-
-          /* Constraint rows should read vertically instead of becoming a tiny table. */
-          .lpp-page-shell [style*="65px 1fr 1fr 150px 1fr 115px"] {
-            grid-template-columns: 1fr 1fr !important;
-          }
-
-          /* Prevent fixed-width tables from crushing the page. */
-          .lpp-page-shell [style*="minWidth: "] {
-            min-width: 0 !important;
-          }
-
-          .lpp-page-shell table {
-            font-size: 10px !important;
-          }
-
-          .lpp-page-shell table th,
-          .lpp-page-shell table td {
-            padding: 8px 6px !important;
-            white-space: nowrap !important;
-          }
-
-          .lpp-page-shell .table-responsive,
-          .lpp-page-shell [style*="overflowX"] {
-            max-width: 100% !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-          }
-
-          /* Result cards */
-          .lpp-page-shell canvas {
-            max-width: 100% !important;
-            height: auto !important;
-          }
-
-          .lpp-page-shell [style*="fontSize: \"31px\""] {
-            font-size: 24px !important;
-          }
-
-          /* Keep long equations readable without overflowing the viewport. */
-          .lpp-page-shell [style*="Georgia"] {
-            font-size: 17px !important;
-            line-height: 1.45 !important;
-            overflow-wrap: anywhere !important;
-          }
-
-          /* Full-width mobile composition: use almost the entire phone viewport. */
-          .lpp-page-shell main > section,
-          .lpp-page-shell main > form > section,
-          .lpp-page-shell main > section:first-child,
-          .lpp-page-shell main > section:nth-child(2) {
-            width: 100% !important;
-            max-width: none !important;
-          }
-
-          .lpp-page-shell main > section:first-child {
-            padding-left: 14px !important;
-            padding-right: 14px !important;
-          }
-
-          .lpp-page-shell main > form > section {
-            padding-left: 12px !important;
-            padding-right: 12px !important;
-          }
-
-          /* Footer/status strip */
-          .lpp-page-shell main > main {
-            width: 100% !important;
-          }
-        
-
-  /* =========================================================
-     MOBILE OBJECTIVE INPUT LAYOUT
-     Optimization = full row
-     X + Y coefficients = same row
-  ========================================================= */
-  .lpp-page-shell .objective-input-grid {
-    display: grid !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-    grid-template-rows: auto auto !important;
-    gap: 14px 12px !important;
-  }
-
-  .lpp-page-shell .objective-input-grid > * {
-    min-width: 0 !important;
-    width: 100% !important;
-  }
-
-  .lpp-page-shell .objective-input-grid > :first-child {
-    grid-column: 1 / -1 !important;
-    grid-row: 1 !important;
-  }
-
-  .lpp-page-shell .objective-input-grid > :nth-child(2) {
-    grid-column: 1 !important;
-    grid-row: 2 !important;
-  }
-
-  .lpp-page-shell .objective-input-grid > :nth-child(3) {
-    grid-column: 2 !important;
-    grid-row: 2 !important;
-  }
-
-  .lpp-page-shell .objective-input-grid input,
-  .lpp-page-shell .objective-input-grid select {
-    width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-}
-
-        @media (max-width: 420px) {
-          .lpp-page-shell main {
-            width: calc(100% - 8px) !important;
-            margin: 0 4px !important;
-          }
-
-          .lpp-page-shell main > section:first-child {
-            padding: 20px 12px !important;
-          }
-
-          .lpp-page-shell main > section:first-child h1 {
-            font-size: 28px !important;
-          }
-
-          .lpp-page-shell main > section:nth-child(2) > div {
-            min-height: 70px !important;
-            padding: 10px !important;
-          }
-
-          .lpp-page-shell main > form > section {
-            padding: 14px !important;
-          }
-        }
-      `}</style>
       {/* ===================================================
           TOP SYSTEM BAR
       =================================================== */}
@@ -2201,6 +1930,24 @@ function LinearProgramming() {
               }}
             />
 
+            <button
+              type="button"
+              onClick={generateMathematicalModel}
+              disabled={parsingWordProblem}
+              style={{
+                marginTop: "16px",
+                padding: "11px 16px",
+                borderRadius: "6px",
+                border: "1px solid #38bdf8",
+                background: "#0b2947",
+                color: "#e2e8f0",
+                cursor: parsingWordProblem ? "wait" : "pointer",
+                fontWeight: "700",
+              }}
+            >
+              {parsingWordProblem ? "GENERATING MODEL..." : "⚡ GENERATE MATHEMATICAL MODEL"}
+            </button>
+
             <div
               style={{
                 marginTop:
@@ -2377,7 +2124,6 @@ function LinearProgramming() {
             />
 
             <div
-              className="objective-input-grid"
               style={{
                 display:
                   "grid",
