@@ -25,6 +25,53 @@ ChartJS.register(
 );
 
 /* =========================================================
+   GRAPH COORDINATE LABEL PLUGIN
+========================================================= */
+
+const coordinateLabelPlugin = {
+  id: "coordinateLabelPlugin",
+
+  afterDatasetsDraw(chart) {
+    const datasetIndex = chart.data.datasets.findIndex(
+      (dataset) => dataset.label === "Corner Points"
+    );
+
+    if (datasetIndex < 0) return;
+
+    const dataset = chart.data.datasets[datasetIndex];
+    const meta = chart.getDatasetMeta(datasetIndex);
+
+    const ctx = chart.ctx;
+
+    ctx.save();
+
+    ctx.font = "600 12px Inter, Arial, sans-serif";
+    ctx.fillStyle = "#15803d";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+
+    meta.data.forEach((element, index) => {
+      const point = dataset.data[index];
+
+      if (!point || !Number.isFinite(point.x) || !Number.isFinite(point.y)) {
+        return;
+      }
+
+      const x = element.x;
+      const y = element.y;
+
+      const label = `(${formatHand(point.x)}, ${formatHand(point.y)})`;
+
+      ctx.fillText(label, x + 7, y - 10);
+    });
+
+    ctx.restore();
+  },
+};
+
+ChartJS.register(coordinateLabelPlugin);
+
+/* =========================================================
    NUMBER / FORMATTING HELPERS
 ========================================================= */
 
@@ -700,7 +747,7 @@ function LinearProgramming() {
 
     try {
       const response = await axios.post(
-        "https://operation-research-solver-backend-6irtlwef7-ishant-coders.vercel.app/api/lpp/parse-word-problem",
+        "https://operation-research-solver-backend.vercel.app/api/lpp/parse-word-problem",
         { problem_statement: problemStatement }
       );
       const data = response.data || {};
@@ -738,6 +785,10 @@ function LinearProgramming() {
     responsive: true,
     maintainAspectRatio: false,
 
+    animation: {
+      duration: 450,
+    },
+
     interaction: {
       intersect: false,
       mode: "nearest",
@@ -748,29 +799,33 @@ function LinearProgramming() {
         position: "top",
 
         labels: {
-          color: "#cbd5e1",
-          padding: 18,
+          color: "#dbeafe",
+          padding: 16,
           usePointStyle: true,
 
           font: {
-            size: 12,
+            size: 11,
             weight: "600",
           },
+
+          filter: (item) =>
+            item.text !== "Corner Points" &&
+            item.text !== "Optimal Solution",
         },
       },
 
       title: {
         display: true,
-        text: "LPP Graphical Analysis",
+        text: "LPP Graphical Solution",
         color: "#f8fafc",
 
         font: {
-          size: 18,
+          size: 17,
           weight: "700",
         },
 
         padding: {
-          bottom: 6,
+          bottom: 4,
         },
       },
 
@@ -778,16 +833,16 @@ function LinearProgramming() {
         display: true,
 
         text:
-          "Constraints • Feasible Region • Corner Points • Optimal Solution",
+          "Constraint Lines • Feasible Region • Corner Coordinates",
 
         color: "#94a3b8",
 
         font: {
-          size: 11,
+          size: 10,
         },
 
         padding: {
-          bottom: 18,
+          bottom: 14,
         },
       },
 
@@ -801,9 +856,15 @@ function LinearProgramming() {
 
         callbacks: {
           label: function (context) {
-            return `(${context.parsed.x}, ${context.parsed.y})`;
+            return `(${formatHand(context.parsed.x)}, ${formatHand(
+              context.parsed.y
+            )})`;
           },
         },
+      },
+
+      coordinateLabelPlugin: {
+        enabled: true,
       },
     },
 
@@ -811,33 +872,36 @@ function LinearProgramming() {
       x: {
         type: "linear",
 
+        min: 0,
+
         grid: {
-          color:
-            "rgba(148, 163, 184, 0.13)",
+          color: "rgba(148, 163, 184, 0.16)",
+          lineWidth: 1,
         },
 
         border: {
-          color: "#475569",
+          color: "#334155",
+          width: 1.5,
         },
 
-        min: 0,
-
         ticks: {
-          color: "#94a3b8",
+          color: "#64748b",
 
           font: {
-            size: 11,
+            size: 10,
           },
+
+          padding: 5,
         },
 
         title: {
           display: true,
-          text: "Decision Variable X",
-          color: "#cbd5e1",
+          text: "X",
+          color: "#334155",
 
           font: {
-            size: 12,
-            weight: "600",
+            size: 13,
+            weight: "700",
           },
         },
       },
@@ -845,31 +909,34 @@ function LinearProgramming() {
       y: {
         min: 0,
 
-        ticks: {
-          color: "#94a3b8",
-
-          font: {
-            size: 11,
-          },
-        },
-
         grid: {
-          color:
-            "rgba(148, 163, 184, 0.13)",
+          color: "rgba(148, 163, 184, 0.16)",
+          lineWidth: 1,
         },
 
         border: {
-          color: "#475569",
+          color: "#334155",
+          width: 1.5,
+        },
+
+        ticks: {
+          color: "#64748b",
+
+          font: {
+            size: 10,
+          },
+
+          padding: 5,
         },
 
         title: {
           display: true,
-          text: "Decision Variable Y",
-          color: "#cbd5e1",
+          text: "Y",
+          color: "#334155",
 
           font: {
-            size: 12,
-            weight: "600",
+            size: 13,
+            weight: "700",
           },
         },
       },
@@ -894,27 +961,85 @@ function LinearProgramming() {
     const points =
       result.corner_points || [];
 
-    const maxX = Math.max(
-      ...points.map(
-        (point) => point.x1
-      ),
-      result.optimal_solution?.x1 || 0,
+    /*
+      Use both corner points and constraint intercepts to determine
+      the graph window. This keeps the full constraint lines visible,
+      like a standard OR practical graph.
+    */
+    const positiveXIntercepts = [];
+    const positiveYIntercepts = [];
+
+    result.graph_constraints.forEach(
+      (constraint) => {
+        const a = Number(constraint.a);
+        const b = Number(constraint.b);
+        const rhs = Number(constraint.rhs);
+
+        if (Number.isFinite(a) && Math.abs(a) > 1e-9) {
+          const xIntercept = rhs / a;
+
+          if (Number.isFinite(xIntercept) && xIntercept > 0) {
+            positiveXIntercepts.push(xIntercept);
+          }
+        }
+
+        if (Number.isFinite(b) && Math.abs(b) > 1e-9) {
+          const yIntercept = rhs / b;
+
+          if (Number.isFinite(yIntercept) && yIntercept > 0) {
+            positiveYIntercepts.push(yIntercept);
+          }
+        }
+      }
+    );
+
+    const pointMaxX = Math.max(
+      ...points.map((point) => Number(point.x1) || 0),
+      Number(result.optimal_solution?.x1) || 0,
       10
     );
 
-    const maxY = Math.max(
-      ...points.map(
-        (point) => point.x2
-      ),
-      result.optimal_solution?.x2 || 0,
+    const pointMaxY = Math.max(
+      ...points.map((point) => Number(point.x2) || 0),
+      Number(result.optimal_solution?.x2) || 0,
       10
     );
 
-    const xMax =
-      Math.ceil(maxX + 2);
+    const rawMaxX = Math.max(
+      pointMaxX,
+      ...positiveXIntercepts,
+      10
+    );
 
-    const yMax =
-      Math.ceil(maxY + 2);
+    const rawMaxY = Math.max(
+      pointMaxY,
+      ...positiveYIntercepts,
+      10
+    );
+
+    const niceAxisMax = (value) => {
+      if (value <= 10) return 10;
+
+      const magnitude =
+        10 ** Math.floor(Math.log10(value));
+
+      const normalized = value / magnitude;
+
+      let step = 1;
+
+      if (normalized > 5) {
+        step = 2;
+      } else if (normalized > 2) {
+        step = 1;
+      }
+
+      return Math.ceil(value / (step * magnitude)) *
+        step *
+        magnitude;
+    };
+
+    const xMax = niceAxisMax(rawMaxX);
+    const yMax = niceAxisMax(rawMaxY);
 
     const datasets = [];
 
@@ -924,8 +1049,8 @@ function LinearProgramming() {
       const regionData =
         feasibleRegion.map(
           (point) => ({
-            x: point.x1,
-            y: point.x2,
+            x: Number(point.x1),
+            y: Number(point.x2),
           })
         );
 
@@ -935,14 +1060,23 @@ function LinearProgramming() {
 
       datasets.push({
         label: "Feasible Region",
-        borderColor: "#22c55e",
+
+        borderColor: "#16a34a",
+
         backgroundColor:
-          "rgba(34, 197, 94, 0.14)",
+          "rgba(34, 197, 94, 0.28)",
+
         borderWidth: 2,
+
         pointRadius: 0,
+
         fill: true,
+
         tension: 0,
+
         data: regionData,
+
+        order: 1,
       });
     }
 
@@ -950,15 +1084,13 @@ function LinearProgramming() {
 
     result.graph_constraints.forEach(
       (constraint, index) => {
-        const {
-          a,
-          b,
-          rhs,
-        } = constraint;
+        const a = Number(constraint.a);
+        const b = Number(constraint.b);
+        const rhs = Number(constraint.rhs);
 
         let linePoints = [];
 
-        if (b !== 0) {
+        if (Math.abs(b) > 1e-9) {
           linePoints = [
             {
               x: 0,
@@ -972,7 +1104,7 @@ function LinearProgramming() {
                 b,
             },
           ];
-        } else if (a !== 0) {
+        } else if (Math.abs(a) > 1e-9) {
           const x =
             rhs / a;
 
@@ -988,64 +1120,25 @@ function LinearProgramming() {
           ];
         }
 
-        const constraintColors = [
-          {
-            line: "#38bdf8",
-            glow:
-              "rgba(56,189,248,0.22)",
-          },
-          {
-            line: "#a78bfa",
-            glow:
-              "rgba(167,139,250,0.22)",
-          },
-          {
-            line: "#f59e0b",
-            glow:
-              "rgba(245,158,11,0.22)",
-          },
-          {
-            line: "#f472b6",
-            glow:
-              "rgba(244,114,182,0.22)",
-          },
-          {
-            line: "#22d3ee",
-            glow:
-              "rgba(34,211,238,0.22)",
-          },
-          {
-            line: "#fb7185",
-            glow:
-              "rgba(251,113,133,0.22)",
-          },
-        ];
-
-        const constraintColor =
-          constraintColors[
-            index %
-              constraintColors.length
-          ];
-
         datasets.push({
           label: `Constraint ${index + 1}`,
 
-          borderColor:
-            constraintColor.line,
+          borderColor: "#334155",
 
-          backgroundColor:
-            constraintColor.glow,
+          backgroundColor: "transparent",
 
           data: linePoints,
 
-          borderWidth: 3,
-          borderDash: [9, 6],
+          borderWidth: 2,
+
+          borderDash: [],
 
           pointRadius: 0,
+
           pointHoverRadius: 4,
 
           pointHoverBackgroundColor:
-            constraintColor.line,
+            "#15803d",
 
           pointHoverBorderColor:
             "#ffffff",
@@ -1053,6 +1146,10 @@ function LinearProgramming() {
           pointHoverBorderWidth: 2,
 
           tension: 0,
+
+          fill: false,
+
+          order: 2,
         });
       }
     );
@@ -1064,33 +1161,30 @@ function LinearProgramming() {
 
       data: points.map(
         (point) => ({
-          x: point.x1,
-          y: point.x2,
+          x: Number(point.x1),
+          y: Number(point.x2),
         })
       ),
 
       showLine: false,
 
-      backgroundColor:
-        "#f43f5e",
+      backgroundColor: "#16a34a",
 
-      pointBackgroundColor:
-        "#f43f5e",
+      pointBackgroundColor: "#16a34a",
 
-      pointRadius: 7,
+      pointRadius: 4,
 
-      pointBorderColor:
-        "#ffffff",
+      pointBorderColor: "#ffffff",
 
-      pointBorderWidth: 2,
+      pointBorderWidth: 1.5,
 
-      pointHoverBackgroundColor:
-        "#fb7185",
+      pointHoverBackgroundColor: "#15803d",
 
-      pointHoverBorderColor:
-        "#ffffff",
+      pointHoverBorderColor: "#ffffff",
 
-      pointHoverRadius: 10,
+      pointHoverRadius: 6,
+
+      order: 3,
     });
 
     /* Optimal Point */
@@ -1102,12 +1196,14 @@ function LinearProgramming() {
         data: [
           {
             x:
-              result.optimal_solution
-                .x1,
+              Number(
+                result.optimal_solution.x1
+              ),
 
             y:
-              result.optimal_solution
-                .x2,
+              Number(
+                result.optimal_solution.x2
+              ),
           },
         ],
 
@@ -1115,28 +1211,28 @@ function LinearProgramming() {
 
         order: 999,
 
-        pointRadius: 15,
+        pointRadius: 8,
 
         pointStyle: "star",
 
         backgroundColor:
-          "#22c55e",
+          "#16a34a",
 
         pointBackgroundColor:
-          "#22c55e",
+          "#16a34a",
 
         pointBorderColor:
           "#ffffff",
 
-        pointBorderWidth: 3,
+        pointBorderWidth: 2,
 
         pointHoverBackgroundColor:
-          "#4ade80",
+          "#22c55e",
 
         pointHoverBorderColor:
           "#ffffff",
 
-        pointHoverRadius: 18,
+        pointHoverRadius: 10,
       });
     }
 
@@ -1225,7 +1321,7 @@ function LinearProgramming() {
 
       const response =
         await axios.post(
-          "https://operation-research-solver-backend-6irtlwef7-ishant-coders.vercel.app/api/lpp/solve",
+          "https://operation-research-solver-backend.vercel.app/api/lpp/solve",
           requestData
         );
 
@@ -1290,7 +1386,7 @@ function LinearProgramming() {
       };
 
       const response = await axios.post(
-        "https://operation-research-solver-backend-6irtlwef7-ishant-coders.vercel.app/api/lpp/export-excel",
+        "https://operation-research-solver-backend.vercel.app/api/lpp/export-excel",
         requestData,
         {
           responseType: "blob",
@@ -3787,15 +3883,15 @@ function LinearProgramming() {
                       height:
                         "500px",
                       background:
-                        "radial-gradient(circle at 78% 20%, rgba(59,130,246,.08), transparent 28%), #07162f",
+                        "#ffffff",
                       border:
-                        "1px solid #203e64",
+                        "1px solid #cbd5e1",
                       borderRadius:
                         "7px",
                       padding:
                         "18px",
                       boxShadow:
-                        "inset 0 0 35px rgba(30,64,175,.08)",
+                        "0 8px 24px rgba(15, 23, 42, 0.08)",
                     }}
                   >
                     <Line
