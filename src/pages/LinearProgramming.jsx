@@ -700,7 +700,7 @@ function LinearProgramming() {
 
     try {
       const response = await axios.post(
-        "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/lpp/parse-word-problem",
+        "https://operation-research-solver-backend-6irtlwef7-ishant-coders.vercel.app/api/lpp/parse-word-problem",
         { problem_statement: problemStatement }
       );
       const data = response.data || {};
@@ -1225,7 +1225,7 @@ function LinearProgramming() {
 
       const response =
         await axios.post(
-          "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/lpp/solve",
+          "https://operation-research-solver-backend-6irtlwef7-ishant-coders.vercel.app/api/lpp/solve",
           requestData
         );
 
@@ -1290,7 +1290,7 @@ function LinearProgramming() {
       };
 
       const response = await axios.post(
-        "https://backend-6wiicnc4i-ishant-coders.vercel.app/api/lpp/export-excel",
+        "https://operation-research-solver-backend-6irtlwef7-ishant-coders.vercel.app/api/lpp/export-excel",
         requestData,
         {
           responseType: "blob",
