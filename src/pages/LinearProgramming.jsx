@@ -25,53 +25,6 @@ ChartJS.register(
 );
 
 /* =========================================================
-   GRAPH COORDINATE LABEL PLUGIN
-========================================================= */
-
-const coordinateLabelPlugin = {
-  id: "coordinateLabelPlugin",
-
-  afterDatasetsDraw(chart) {
-    const datasetIndex = chart.data.datasets.findIndex(
-      (dataset) => dataset.label === "Corner Points"
-    );
-
-    if (datasetIndex < 0) return;
-
-    const dataset = chart.data.datasets[datasetIndex];
-    const meta = chart.getDatasetMeta(datasetIndex);
-
-    const ctx = chart.ctx;
-
-    ctx.save();
-
-    ctx.font = "600 12px Inter, Arial, sans-serif";
-    ctx.fillStyle = "#15803d";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-
-    meta.data.forEach((element, index) => {
-      const point = dataset.data[index];
-
-      if (!point || !Number.isFinite(point.x) || !Number.isFinite(point.y)) {
-        return;
-      }
-
-      const x = element.x;
-      const y = element.y;
-
-      const label = `(${formatHand(point.x)}, ${formatHand(point.y)})`;
-
-      ctx.fillText(label, x + 7, y - 10);
-    });
-
-    ctx.restore();
-  },
-};
-
-ChartJS.register(coordinateLabelPlugin);
-
-/* =========================================================
    NUMBER / FORMATTING HELPERS
 ========================================================= */
 
@@ -785,10 +738,6 @@ function LinearProgramming() {
     responsive: true,
     maintainAspectRatio: false,
 
-    animation: {
-      duration: 450,
-    },
-
     interaction: {
       intersect: false,
       mode: "nearest",
@@ -799,33 +748,29 @@ function LinearProgramming() {
         position: "top",
 
         labels: {
-          color: "#dbeafe",
-          padding: 16,
+          color: "#cbd5e1",
+          padding: 18,
           usePointStyle: true,
 
           font: {
-            size: 11,
+            size: 12,
             weight: "600",
           },
-
-          filter: (item) =>
-            item.text !== "Corner Points" &&
-            item.text !== "Optimal Solution",
         },
       },
 
       title: {
         display: true,
-        text: "LPP Graphical Solution",
+        text: "LPP Graphical Analysis",
         color: "#f8fafc",
 
         font: {
-          size: 17,
+          size: 18,
           weight: "700",
         },
 
         padding: {
-          bottom: 4,
+          bottom: 6,
         },
       },
 
@@ -833,16 +778,16 @@ function LinearProgramming() {
         display: true,
 
         text:
-          "Constraint Lines • Feasible Region • Corner Coordinates",
+          "Constraints • Feasible Region • Corner Points • Optimal Solution",
 
         color: "#94a3b8",
 
         font: {
-          size: 10,
+          size: 11,
         },
 
         padding: {
-          bottom: 14,
+          bottom: 18,
         },
       },
 
@@ -856,15 +801,9 @@ function LinearProgramming() {
 
         callbacks: {
           label: function (context) {
-            return `(${formatHand(context.parsed.x)}, ${formatHand(
-              context.parsed.y
-            )})`;
+            return `(${context.parsed.x}, ${context.parsed.y})`;
           },
         },
-      },
-
-      coordinateLabelPlugin: {
-        enabled: true,
       },
     },
 
@@ -872,36 +811,33 @@ function LinearProgramming() {
       x: {
         type: "linear",
 
-        min: 0,
-
         grid: {
-          color: "rgba(148, 163, 184, 0.16)",
-          lineWidth: 1,
+          color:
+            "rgba(148, 163, 184, 0.13)",
         },
 
         border: {
-          color: "#334155",
-          width: 1.5,
+          color: "#475569",
         },
 
+        min: 0,
+
         ticks: {
-          color: "#64748b",
+          color: "#94a3b8",
 
           font: {
-            size: 10,
+            size: 11,
           },
-
-          padding: 5,
         },
 
         title: {
           display: true,
-          text: "X",
-          color: "#334155",
+          text: "Decision Variable X",
+          color: "#cbd5e1",
 
           font: {
-            size: 13,
-            weight: "700",
+            size: 12,
+            weight: "600",
           },
         },
       },
@@ -909,34 +845,31 @@ function LinearProgramming() {
       y: {
         min: 0,
 
+        ticks: {
+          color: "#94a3b8",
+
+          font: {
+            size: 11,
+          },
+        },
+
         grid: {
-          color: "rgba(148, 163, 184, 0.16)",
-          lineWidth: 1,
+          color:
+            "rgba(148, 163, 184, 0.13)",
         },
 
         border: {
-          color: "#334155",
-          width: 1.5,
-        },
-
-        ticks: {
-          color: "#64748b",
-
-          font: {
-            size: 10,
-          },
-
-          padding: 5,
+          color: "#475569",
         },
 
         title: {
           display: true,
-          text: "Y",
-          color: "#334155",
+          text: "Decision Variable Y",
+          color: "#cbd5e1",
 
           font: {
-            size: 13,
-            weight: "700",
+            size: 12,
+            weight: "600",
           },
         },
       },
@@ -961,85 +894,27 @@ function LinearProgramming() {
     const points =
       result.corner_points || [];
 
-    /*
-      Use both corner points and constraint intercepts to determine
-      the graph window. This keeps the full constraint lines visible,
-      like a standard OR practical graph.
-    */
-    const positiveXIntercepts = [];
-    const positiveYIntercepts = [];
-
-    result.graph_constraints.forEach(
-      (constraint) => {
-        const a = Number(constraint.a);
-        const b = Number(constraint.b);
-        const rhs = Number(constraint.rhs);
-
-        if (Number.isFinite(a) && Math.abs(a) > 1e-9) {
-          const xIntercept = rhs / a;
-
-          if (Number.isFinite(xIntercept) && xIntercept > 0) {
-            positiveXIntercepts.push(xIntercept);
-          }
-        }
-
-        if (Number.isFinite(b) && Math.abs(b) > 1e-9) {
-          const yIntercept = rhs / b;
-
-          if (Number.isFinite(yIntercept) && yIntercept > 0) {
-            positiveYIntercepts.push(yIntercept);
-          }
-        }
-      }
-    );
-
-    const pointMaxX = Math.max(
-      ...points.map((point) => Number(point.x1) || 0),
-      Number(result.optimal_solution?.x1) || 0,
+    const maxX = Math.max(
+      ...points.map(
+        (point) => point.x1
+      ),
+      result.optimal_solution?.x1 || 0,
       10
     );
 
-    const pointMaxY = Math.max(
-      ...points.map((point) => Number(point.x2) || 0),
-      Number(result.optimal_solution?.x2) || 0,
+    const maxY = Math.max(
+      ...points.map(
+        (point) => point.x2
+      ),
+      result.optimal_solution?.x2 || 0,
       10
     );
 
-    const rawMaxX = Math.max(
-      pointMaxX,
-      ...positiveXIntercepts,
-      10
-    );
+    const xMax =
+      Math.ceil(maxX + 2);
 
-    const rawMaxY = Math.max(
-      pointMaxY,
-      ...positiveYIntercepts,
-      10
-    );
-
-    const niceAxisMax = (value) => {
-      if (value <= 10) return 10;
-
-      const magnitude =
-        10 ** Math.floor(Math.log10(value));
-
-      const normalized = value / magnitude;
-
-      let step = 1;
-
-      if (normalized > 5) {
-        step = 2;
-      } else if (normalized > 2) {
-        step = 1;
-      }
-
-      return Math.ceil(value / (step * magnitude)) *
-        step *
-        magnitude;
-    };
-
-    const xMax = niceAxisMax(rawMaxX);
-    const yMax = niceAxisMax(rawMaxY);
+    const yMax =
+      Math.ceil(maxY + 2);
 
     const datasets = [];
 
@@ -1049,8 +924,8 @@ function LinearProgramming() {
       const regionData =
         feasibleRegion.map(
           (point) => ({
-            x: Number(point.x1),
-            y: Number(point.x2),
+            x: point.x1,
+            y: point.x2,
           })
         );
 
@@ -1060,23 +935,14 @@ function LinearProgramming() {
 
       datasets.push({
         label: "Feasible Region",
-
-        borderColor: "#16a34a",
-
+        borderColor: "#22c55e",
         backgroundColor:
-          "rgba(34, 197, 94, 0.28)",
-
+          "rgba(34, 197, 94, 0.14)",
         borderWidth: 2,
-
         pointRadius: 0,
-
         fill: true,
-
         tension: 0,
-
         data: regionData,
-
-        order: 1,
       });
     }
 
@@ -1084,13 +950,15 @@ function LinearProgramming() {
 
     result.graph_constraints.forEach(
       (constraint, index) => {
-        const a = Number(constraint.a);
-        const b = Number(constraint.b);
-        const rhs = Number(constraint.rhs);
+        const {
+          a,
+          b,
+          rhs,
+        } = constraint;
 
         let linePoints = [];
 
-        if (Math.abs(b) > 1e-9) {
+        if (b !== 0) {
           linePoints = [
             {
               x: 0,
@@ -1104,7 +972,7 @@ function LinearProgramming() {
                 b,
             },
           ];
-        } else if (Math.abs(a) > 1e-9) {
+        } else if (a !== 0) {
           const x =
             rhs / a;
 
@@ -1120,25 +988,64 @@ function LinearProgramming() {
           ];
         }
 
+        const constraintColors = [
+          {
+            line: "#38bdf8",
+            glow:
+              "rgba(56,189,248,0.22)",
+          },
+          {
+            line: "#a78bfa",
+            glow:
+              "rgba(167,139,250,0.22)",
+          },
+          {
+            line: "#f59e0b",
+            glow:
+              "rgba(245,158,11,0.22)",
+          },
+          {
+            line: "#f472b6",
+            glow:
+              "rgba(244,114,182,0.22)",
+          },
+          {
+            line: "#22d3ee",
+            glow:
+              "rgba(34,211,238,0.22)",
+          },
+          {
+            line: "#fb7185",
+            glow:
+              "rgba(251,113,133,0.22)",
+          },
+        ];
+
+        const constraintColor =
+          constraintColors[
+            index %
+              constraintColors.length
+          ];
+
         datasets.push({
           label: `Constraint ${index + 1}`,
 
-          borderColor: "#334155",
+          borderColor:
+            constraintColor.line,
 
-          backgroundColor: "transparent",
+          backgroundColor:
+            constraintColor.glow,
 
           data: linePoints,
 
-          borderWidth: 2,
-
-          borderDash: [],
+          borderWidth: 3,
+          borderDash: [9, 6],
 
           pointRadius: 0,
-
           pointHoverRadius: 4,
 
           pointHoverBackgroundColor:
-            "#15803d",
+            constraintColor.line,
 
           pointHoverBorderColor:
             "#ffffff",
@@ -1146,10 +1053,6 @@ function LinearProgramming() {
           pointHoverBorderWidth: 2,
 
           tension: 0,
-
-          fill: false,
-
-          order: 2,
         });
       }
     );
@@ -1161,30 +1064,33 @@ function LinearProgramming() {
 
       data: points.map(
         (point) => ({
-          x: Number(point.x1),
-          y: Number(point.x2),
+          x: point.x1,
+          y: point.x2,
         })
       ),
 
       showLine: false,
 
-      backgroundColor: "#16a34a",
+      backgroundColor:
+        "#f43f5e",
 
-      pointBackgroundColor: "#16a34a",
+      pointBackgroundColor:
+        "#f43f5e",
 
-      pointRadius: 4,
+      pointRadius: 7,
 
-      pointBorderColor: "#ffffff",
+      pointBorderColor:
+        "#ffffff",
 
-      pointBorderWidth: 1.5,
+      pointBorderWidth: 2,
 
-      pointHoverBackgroundColor: "#15803d",
+      pointHoverBackgroundColor:
+        "#fb7185",
 
-      pointHoverBorderColor: "#ffffff",
+      pointHoverBorderColor:
+        "#ffffff",
 
-      pointHoverRadius: 6,
-
-      order: 3,
+      pointHoverRadius: 10,
     });
 
     /* Optimal Point */
@@ -1196,14 +1102,12 @@ function LinearProgramming() {
         data: [
           {
             x:
-              Number(
-                result.optimal_solution.x1
-              ),
+              result.optimal_solution
+                .x1,
 
             y:
-              Number(
-                result.optimal_solution.x2
-              ),
+              result.optimal_solution
+                .x2,
           },
         ],
 
@@ -1211,28 +1115,28 @@ function LinearProgramming() {
 
         order: 999,
 
-        pointRadius: 8,
+        pointRadius: 15,
 
         pointStyle: "star",
 
         backgroundColor:
-          "#16a34a",
+          "#22c55e",
 
         pointBackgroundColor:
-          "#16a34a",
+          "#22c55e",
 
         pointBorderColor:
           "#ffffff",
 
-        pointBorderWidth: 2,
+        pointBorderWidth: 3,
 
         pointHoverBackgroundColor:
-          "#22c55e",
+          "#4ade80",
 
         pointHoverBorderColor:
           "#ffffff",
 
-        pointHoverRadius: 10,
+        pointHoverRadius: 18,
       });
     }
 
@@ -2395,8 +2299,14 @@ function LinearProgramming() {
                   "1px solid #203e64",
                 borderRadius:
                   "7px",
-                overflow:
+                overflowX:
+                  "auto",
+                overflowY:
                   "hidden",
+                WebkitOverflowScrolling:
+                  "touch",
+                maxWidth:
+                  "100%",
               }}
             >
               <div
@@ -2404,7 +2314,13 @@ function LinearProgramming() {
                   display:
                     "grid",
                   gridTemplateColumns:
-                    "65px 1fr 1fr 150px 1fr 115px",
+                    "65px 220px 220px 150px 220px 115px",
+                  width:
+                    "1078px",
+                  minWidth:
+                    "1078px",
+                  boxSizing:
+                    "border-box",
                   background:
                     "#0a1c3b",
                   borderBottom:
@@ -2458,7 +2374,13 @@ function LinearProgramming() {
                       display:
                         "grid",
                       gridTemplateColumns:
-                        "65px 1fr 1fr 150px 1fr 115px",
+                        "65px 220px 220px 150px 220px 115px",
+                      width:
+                        "1078px",
+                      minWidth:
+                        "1078px",
+                      boxSizing:
+                        "border-box",
                       gap: "12px",
                       alignItems:
                         "center",
@@ -3140,229 +3062,252 @@ function LinearProgramming() {
 
                 <div
                   style={{
-                    marginTop:
-                      "22px",
-                    overflowX:
-                      "auto",
+                    marginTop: "22px",
+                    width: "100%",
+                    maxWidth: "100%",
+                    overflowX: "auto",
+                    overflowY: "hidden",
+                    WebkitOverflowScrolling: "touch",
+                    touchAction: "pan-x",
+                    overscrollBehaviorX: "contain",
+                    scrollbarWidth: "thin",
+                    border: "1px solid #203e64",
+                    borderRadius: "7px",
+                    background: "#07162f",
                   }}
                 >
-                  <table
+                  <div
                     style={{
-                      width:
-                        "100%",
-                      borderCollapse:
-                        "collapse",
-                      minWidth:
-                        "650px",
+                      width: "max-content",
+                      minWidth: "760px",
                     }}
                   >
-                    <thead>
-                      <tr>
-                        <th
-                          style={
-                            matrixHeaderStyle
-                          }
-                        >
-                          CONSTRAINT
-                        </th>
-
-                        <th
-                          style={
-                            matrixHeaderStyle
-                          }
-                        >
-                          X
-                        </th>
-
-                        <th
-                          style={
-                            matrixHeaderStyle
-                          }
-                        >
-                          Y
-                        </th>
-
-                        <th
-                          style={
-                            matrixHeaderStyle
-                          }
-                        >
-                          SIGN
-                        </th>
-
-                        <th
-                          style={
-                            matrixHeaderStyle
-                          }
-                        >
-                          RHS
-                        </th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {constraints.map(
-                        (
-                          constraint,
-                          index
-                        ) => (
-                          <tr
-                            key={
-                              index
-                            }
+                    <table
+                      style={{
+                        width: "760px",
+                        minWidth: "760px",
+                        borderCollapse: "collapse",
+                        tableLayout: "fixed",
+                      }}
+                    >
+                      <thead>
+                        <tr>
+                          <th
+                            style={{
+                              ...matrixHeaderStyle,
+                              width: "160px",
+                              minWidth: "160px",
+                            }}
                           >
-                            <td
-                              style={{
-                                ...matrixCellStyle,
-                                color:
-                                  "#60a5fa",
-                                fontWeight:
-                                  "800",
-                              }}
-                            >
-                              C
-                              {index +
-                                1}
-                            </td>
+                            CONSTRAINT
+                          </th>
 
-                            <td
-                              style={
-                                matrixCellStyle
+                          <th
+                            style={{
+                              ...matrixHeaderStyle,
+                              width: "150px",
+                              minWidth: "150px",
+                            }}
+                          >
+                            X
+                          </th>
+
+                          <th
+                            style={{
+                              ...matrixHeaderStyle,
+                              width: "150px",
+                              minWidth: "150px",
+                            }}
+                          >
+                            Y
+                          </th>
+
+                          <th
+                            style={{
+                              ...matrixHeaderStyle,
+                              width: "150px",
+                              minWidth: "150px",
+                            }}
+                          >
+                            SIGN
+                          </th>
+
+                          <th
+                            style={{
+                              ...matrixHeaderStyle,
+                              width: "150px",
+                              minWidth: "150px",
+                            }}
+                          >
+                            RHS
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {constraints.map(
+                          (
+                            constraint,
+                            index
+                          ) => (
+                            <tr
+                              key={
+                                index
                               }
                             >
-                              {
-                                constraint.x1
-                              }
-                            </td>
+                              <td
+                                style={{
+                                  ...matrixCellStyle,
+                                  width: "160px",
+                                  minWidth: "160px",
+                                  color: "#60a5fa",
+                                  fontWeight: "800",
+                                }}
+                              >
+                                C
+                                {index +
+                                  1}
+                              </td>
 
-                            <td
-                              style={
-                                matrixCellStyle
-                              }
-                            >
-                              {
-                                constraint.x2
-                              }
-                            </td>
+                              <td
+                                style={{
+                                  ...matrixCellStyle,
+                                  width: "150px",
+                                  minWidth: "150px",
+                                }}
+                              >
+                                {
+                                  constraint.x1
+                                }
+                              </td>
 
-                            <td
-                              style={{
-                                ...matrixCellStyle,
-                                color:
-                                  "#a78bfa",
-                                fontWeight:
-                                  "800",
-                              }}
-                            >
-                              {constraint.operator ===
-                              "<="
-                                ? "≤"
-                                : constraint.operator ===
-                                    ">="
-                                  ? "≥"
-                                  : "="}
-                            </td>
+                              <td
+                                style={{
+                                  ...matrixCellStyle,
+                                  width: "150px",
+                                  minWidth: "150px",
+                                }}
+                              >
+                                {
+                                  constraint.x2
+                                }
+                              </td>
 
-                            <td
-                              style={{
-                                ...matrixCellStyle,
-                                fontWeight:
-                                  "800",
-                              }}
-                            >
-                              {
-                                constraint.rhs
-                              }
-                            </td>
-                          </tr>
-                        )
-                      )}
+                              <td
+                                style={{
+                                  ...matrixCellStyle,
+                                  width: "150px",
+                                  minWidth: "150px",
+                                  color: "#a78bfa",
+                                  fontWeight: "800",
+                                }}
+                              >
+                                {constraint.operator ===
+                                "<="
+                                  ? "≤"
+                                  : constraint.operator ===
+                                      ">="
+                                    ? "≥"
+                                    : "="}
+                              </td>
 
-                      <tr>
-                        <td
-                          style={{
-                            ...matrixCellStyle,
-                            color:
-                              "#22c55e",
-                            fontWeight:
-                              "800",
-                          }}
-                        >
-                          OBJECTIVE
-                        </td>
+                              <td
+                                style={{
+                                  ...matrixCellStyle,
+                                  width: "150px",
+                                  minWidth: "150px",
+                                  fontWeight: "800",
+                                }}
+                              >
+                                {
+                                  constraint.rhs
+                                }
+                              </td>
+                            </tr>
+                          )
+                        )}
 
-                        <td
-                          style={{
-                            ...matrixCellStyle,
-                            color:
-                              "#22c55e",
-                            fontWeight:
-                              "800",
-                          }}
-                        >
-                          {
-                            objective.x1
-                          }
-                        </td>
+                        <tr>
+                          <td
+                            style={{
+                              ...matrixCellStyle,
+                              width: "160px",
+                              minWidth: "160px",
+                              color: "#22c55e",
+                              fontWeight: "800",
+                            }}
+                          >
+                            OBJECTIVE
+                          </td>
 
-                        <td
-                          style={{
-                            ...matrixCellStyle,
-                            color:
-                              "#22c55e",
-                            fontWeight:
-                              "800",
-                          }}
-                        >
-                          {
-                            objective.x2
-                          }
-                        </td>
+                          <td
+                            style={{
+                              ...matrixCellStyle,
+                              width: "150px",
+                              minWidth: "150px",
+                              color: "#22c55e",
+                              fontWeight: "800",
+                            }}
+                          >
+                            {
+                              objective.x1
+                            }
+                          </td>
 
-                        <td
-                          style={
-                            matrixCellStyle
-                          }
-                        >
-                          —
-                        </td>
+                          <td
+                            style={{
+                              ...matrixCellStyle,
+                              width: "150px",
+                              minWidth: "150px",
+                              color: "#22c55e",
+                              fontWeight: "800",
+                            }}
+                          >
+                            {
+                              objective.x2
+                            }
+                          </td>
 
-                        <td
-                          style={
-                            matrixCellStyle
-                          }
-                        >
-                          —
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                          <td
+                            style={{
+                              ...matrixCellStyle,
+                              width: "150px",
+                              minWidth: "150px",
+                            }}
+                          >
+                            —
+                          </td>
+
+                          <td
+                            style={{
+                              ...matrixCellStyle,
+                              width: "150px",
+                              minWidth: "150px",
+                            }}
+                          >
+                            —
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 <div
                   style={{
-                    marginTop:
-                      "17px",
-                    padding:
-                      "14px 16px",
-                    background:
-                      "#091b38",
-                    border:
-                      "1px solid #1d385b",
-                    borderRadius:
-                      "6px",
-                    color:
-                      "#94a3b8",
-                    fontSize:
-                      "11px",
-                    lineHeight:
-                      1.6,
+                    marginTop: "17px",
+                    padding: "14px 16px",
+                    background: "#091b38",
+                    border: "1px solid #1d385b",
+                    borderRadius: "6px",
+                    color: "#94a3b8",
+                    fontSize: "11px",
+                    lineHeight: 1.6,
                   }}
                 >
                   <strong
                     style={{
-                      color:
-                        "#cbd5e1",
+                      color: "#cbd5e1",
                     }}
                   >
                     Practical format:
@@ -3883,15 +3828,15 @@ function LinearProgramming() {
                       height:
                         "500px",
                       background:
-                        "#ffffff",
+                        "radial-gradient(circle at 78% 20%, rgba(59,130,246,.08), transparent 28%), #07162f",
                       border:
-                        "1px solid #cbd5e1",
+                        "1px solid #203e64",
                       borderRadius:
                         "7px",
                       padding:
                         "18px",
                       boxShadow:
-                        "0 8px 24px rgba(15, 23, 42, 0.08)",
+                        "inset 0 0 35px rgba(30,64,175,.08)",
                     }}
                   >
                     <Line
