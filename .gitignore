@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 .vercel
+diff.txt
+lpp_current_backup.patch
