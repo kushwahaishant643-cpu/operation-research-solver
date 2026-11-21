@@ -116,22 +116,22 @@ function Transportation() {
 
       if (method === "north_west") {
         endpoint =
-          "http://127.0.0.1:5000/api/transportation/north-west";
+          "https://operation-research-backend.onrender.com/api/transportation/north-west";
       }
 
       if (method === "least_cost") {
         endpoint =
-          "http://127.0.0.1:5000/api/transportation/least-cost";
+          "https://operation-research-backend.onrender.com/api/transportation/least-cost";
       }
 
       if (method === "vogel") {
         endpoint =
-          "http://127.0.0.1:5000/api/transportation/vogel";
+          "https://operation-research-backend.onrender.com/api/transportation/vogel";
       }
 
       if (method === "modi") {
         endpoint =
-          "http://127.0.0.1:5000/api/transportation/modi";
+          "https://operation-research-backend.onrender.com/api/transportation/modi";
       }
 
       const response = await axios.post(endpoint, {
